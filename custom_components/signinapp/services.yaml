@@ -9,8 +9,17 @@ sign_in:
       selector:
         select:
           options:
-            - office
-            - remote
+            - label: Office
+              value: office
+            - label: Remote
+              value: remote
+    device_id:
+      name: Device
+      description: The device to perform the action on.
+      required: false
+      selector:
+        device:
+          integration: signinapp
 
 sign_out:
   name: Sign Out
@@ -23,5 +32,14 @@ sign_out:
       selector:
         select:
           options:
-            - office
-            - remote
+            - label: Office
+              value: office
+            - label: Remote
+              value: remote
+    device_id:
+      name: Device
+      description: The device to perform the action on.
+      required: false
+      selector:
+        device:
+          integration: signinapp
