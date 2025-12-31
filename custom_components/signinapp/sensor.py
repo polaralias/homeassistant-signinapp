@@ -24,14 +24,18 @@ async def async_setup_entry(
     async_add_entities: AddEntitiesCallback,
 ) -> None:
     """Set up the Sign In App sensor."""
+    _LOGGER.debug("Setting up Sign In App sensor for entry: %s", entry.entry_id)
     api = hass.data[DOMAIN][entry.entry_id]["api"]
 
     async def async_update_data():
         """Fetch data from API."""
+        _LOGGER.debug("Fetching sensor data from API")
         try:
             data = await api.get_config()
+            _LOGGER.debug("Sensor data fetched successfully")
             return data
         except Exception as err:
+            _LOGGER.error("Error communicating with API: %s", err)
             raise UpdateFailed(f"Error communicating with API: {err}")
 
     coordinator = DataUpdateCoordinator(
