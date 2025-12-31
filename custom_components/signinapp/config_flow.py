@@ -37,26 +37,31 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_user(self, user_input=None):
         """Handle the initial step."""
+        _LOGGER.debug("Starting user step in config flow")
         errors = {}
         if user_input is not None:
             session = aiohttp_client.async_get_clientsession(self.hass)
             api = SignInAppApi(session)
             try:
+                _LOGGER.debug("Attempting to connect with provided code")
                 self.token = await api.connect(user_input[CONF_COMPANION_CODE])
+                _LOGGER.debug("Connection successful, token received")
 
                 # Try to fetch sites to help the user
                 api.set_token(self.token)
                 try:
+                    _LOGGER.debug("Fetching sites for user convenience")
                     config_data = await api.get_config()
                     if "sites" in config_data:
                         for site in config_data["sites"]:
                             self.sites[site["id"]] = site["name"]
-                except Exception:
-                    _LOGGER.warning("Could not fetch sites during config flow")
+                        _LOGGER.debug("Fetched %d sites", len(self.sites))
+                except Exception as e:
+                    _LOGGER.warning("Could not fetch sites during config flow: %s", e)
 
                 return await self.async_step_sites()
-            except Exception:
-                _LOGGER.exception("Error connecting")
+            except Exception as e:
+                _LOGGER.exception("Error connecting: %s", e)
                 errors["base"] = "connect_error"
 
         return self.async_show_form(
@@ -69,8 +74,10 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     async def async_step_sites(self, user_input=None):
         """Handle the sites configuration step."""
+        _LOGGER.debug("Starting sites step in config flow")
         errors = {}
         if user_input is not None:
+            _LOGGER.debug("Creating entry with data: %s", user_input)
             data = {
                 CONF_ACCESS_TOKEN: self.token,
                 **user_input

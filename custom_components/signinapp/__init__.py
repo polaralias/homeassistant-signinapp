@@ -34,10 +34,12 @@ SERVICE_SCHEMA = vol.Schema({
 
 async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Sign In App component."""
+    _LOGGER.debug("Setting up Sign In App component")
     return True
 
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up Sign In App from a config entry."""
+    _LOGGER.debug("Setting up Sign In App entry: %s", entry.entry_id)
     session = aiohttp_client.async_get_clientsession(hass)
     # Use HA's timezone
     timezone = hass.config.time_zone
@@ -54,6 +56,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
 
     async def handle_sign_in(call: ServiceCall):
         """Handle the sign in service."""
+        _LOGGER.debug("Handling sign in call: %s", call.data)
         site_type = call.data[ATTR_SITE_TYPE]
         config_data = entry.data
 
@@ -79,13 +82,20 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             lng = 0.0
             accuracy = 0.0
 
-        await api.sign_in(site_id, lat, lng, accuracy)
-        # Force update of sensor?
-        # We can't easily force update the sensor from here without reference to it.
-        # But the sensor polls, so it will update eventually.
+        _LOGGER.debug(
+            "Signing in to site_id=%s with lat=%s, lng=%s, accuracy=%s",
+            site_id, lat, lng, accuracy
+        )
+        try:
+            await api.sign_in(site_id, lat, lng, accuracy)
+            _LOGGER.debug("Sign in successful")
+        except Exception as e:
+            _LOGGER.error("Sign in failed: %s", e)
+            raise
 
     async def handle_sign_out(call: ServiceCall):
         """Handle the sign out service."""
+        _LOGGER.debug("Handling sign out call: %s", call.data)
         site_type = call.data[ATTR_SITE_TYPE]
         config_data = entry.data
 
@@ -100,6 +110,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 lng = float(state.attributes.get("longitude", 0))
                 accuracy = float(distance)
             else:
+                _LOGGER.warning("Device tracker %s not found, using 0", tracker_entity)
                 lat = 0.0
                 lng = 0.0
                 accuracy = 0.0
@@ -109,7 +120,16 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             lng = 0.0
             accuracy = 0.0
 
-        await api.sign_out(site_id, lat, lng, accuracy)
+        _LOGGER.debug(
+            "Signing out from site_id=%s with lat=%s, lng=%s, accuracy=%s",
+            site_id, lat, lng, accuracy
+        )
+        try:
+            await api.sign_out(site_id, lat, lng, accuracy)
+            _LOGGER.debug("Sign out successful")
+        except Exception as e:
+            _LOGGER.error("Sign out failed: %s", e)
+            raise
 
     hass.services.async_register(DOMAIN, SERVICE_SIGN_IN, handle_sign_in, schema=SERVICE_SCHEMA)
     hass.services.async_register(DOMAIN, SERVICE_SIGN_OUT, handle_sign_out, schema=SERVICE_SCHEMA)

@@ -49,8 +49,10 @@ class SignInAppApi:
 
         payload = {"code": code}
 
+        _LOGGER.debug("Connect request: %s %s", url, payload)
         async with self._session.post(url, headers=headers, json=payload) as response:
             data = await response.json()
+            _LOGGER.debug("Connect response: %s %s", response.status, data)
             if not data.get("success") or not data.get("token"):
                 _LOGGER.error("Failed to connect: %s", data)
                 raise Exception(f"Connection failed: {data}")
@@ -76,7 +78,11 @@ class SignInAppApi:
             "messages": []
         }
 
+        _LOGGER.debug("Sign in request: %s %s", url, payload)
         async with self._session.post(url, headers=headers, json=payload) as response:
+            _LOGGER.debug("Sign in response status: %s", response.status)
+            response_text = await response.text()
+            _LOGGER.debug("Sign in response body: %s", response_text)
             response.raise_for_status()
             return await response.json()
 
@@ -99,7 +105,11 @@ class SignInAppApi:
             "messages": []
         }
 
+        _LOGGER.debug("Sign out request: %s %s", url, payload)
         async with self._session.post(url, headers=headers, json=payload) as response:
+            _LOGGER.debug("Sign out response status: %s", response.status)
+            response_text = await response.text()
+            _LOGGER.debug("Sign out response body: %s", response_text)
             response.raise_for_status()
             return await response.json()
 
@@ -108,6 +118,15 @@ class SignInAppApi:
         url = f"{API_BASE_URL}/config-v2"
         headers = self._get_headers()
 
+        _LOGGER.debug("Get config request: %s", url)
         async with self._session.get(url, headers=headers) as response:
+            _LOGGER.debug("Get config response status: %s", response.status)
             response.raise_for_status()
-            return await response.json()
+            try:
+                data = await response.json()
+                _LOGGER.debug("Get config response body: %s", data)
+                return data
+            except Exception as e:
+                response_text = await response.text()
+                _LOGGER.error("Failed to parse get config response: %s", response_text)
+                raise e
