@@ -43,6 +43,13 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     """Set up the Sign In App component."""
     _LOGGER.debug("Setting up Sign In App component")
 
+    # Register static path for images
+    hass.http.register_static_path(
+        f"/{DOMAIN}_static",
+        hass.config.path(f"custom_components/{DOMAIN}/www"),
+        cache_headers=True
+    )
+
     # Register services globally
     hass.services.async_register(DOMAIN, SERVICE_SIGN_IN, get_handle_sign_in(hass), schema=SERVICE_SCHEMA_SIGN_IN)
     hass.services.async_register(DOMAIN, SERVICE_SIGN_OUT, get_handle_sign_out(hass), schema=SERVICE_SCHEMA_SIGN_OUT)

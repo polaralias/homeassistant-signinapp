@@ -76,6 +76,11 @@ class SignInAppSensor(CoordinatorEntity, SensorEntity):
         self._attr_name = f"SignInApp {name}"
 
     @property
+    def entity_picture(self):
+        """Return the entity picture."""
+        return f"/{DOMAIN}_static/icon.png"
+
+    @property
     def native_value(self):
         """Return the state of the sensor."""
         data = self.coordinator.data
