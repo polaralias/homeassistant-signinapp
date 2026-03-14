@@ -1,6 +1,6 @@
-# <img src="custom_components/signinapp/www/icon.png" width="48" height="48" align="center" alt="Sign In App Icon"> Home Assistant Sign In App Integration
+# <img src="custom_components/signinapp/brand/icon.png" width="48" height="48" align="center" alt="Sign In App Icon"> Home Assistant Sign In App Integration
 
-![Sign In App Brand Logo](custom_components/signinapp/www/logo.png)
+![Sign In App Brand Logo](custom_components/signinapp/brand/logo.png)
 
 This is a custom integration for [Home Assistant](https://www.home-assistant.io/) that connects to [Sign In App](https://signinapp.com/). It allows you to manage sign-ins and sign-outs, track your status, and automate actions based on your Sign In App status.
 
