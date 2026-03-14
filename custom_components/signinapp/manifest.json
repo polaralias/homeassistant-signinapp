@@ -4,9 +4,9 @@
   "codeowners": [],
   "config_flow": true,
   "dependencies": [],
-  "documentation": "https://github.com/jules/signinapp",
+  "documentation": "https://github.com/polaralias/homeassistant-signinapp",
   "iot_class": "cloud_polling",
-  "issue_tracker": "https://github.com/jules/signinapp/issues",
+  "issue_tracker": "https://github.com/polaralias/homeassistant-signinapp/issues",
   "requirements": [],
   "version": "1.0.0"
 }

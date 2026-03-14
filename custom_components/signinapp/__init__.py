@@ -3,6 +3,7 @@ import logging
 import voluptuous as vol
 
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.components.http import StaticPathConfig
 from homeassistant.const import CONF_ACCESS_TOKEN, Platform
 from homeassistant.core import HomeAssistant, ServiceCall
 from homeassistant.helpers import aiohttp_client, config_validation as cv, device_registry as dr
@@ -44,11 +45,24 @@ async def async_setup(hass: HomeAssistant, config: ConfigType) -> bool:
     _LOGGER.debug("Setting up Sign In App component")
 
     # Register static path for images
-    hass.http.register_static_path(
-        f"/{DOMAIN}_static",
-        hass.config.path(f"custom_components/{DOMAIN}/www"),
-        cache_headers=True
-    )
+    static_url_path = f"/{DOMAIN}_static"
+    static_local_path = hass.config.path(f"custom_components/{DOMAIN}/www")
+    if hasattr(hass.http, "async_register_static_paths"):
+        hass.http.async_register_static_paths(
+            [
+                StaticPathConfig(
+                    static_url_path,
+                    static_local_path,
+                    cache_headers=True,
+                )
+            ]
+        )
+    else:
+        hass.http.register_static_path(
+            static_url_path,
+            static_local_path,
+            cache_headers=True,
+        )
 
     # Register services globally
     hass.services.async_register(DOMAIN, SERVICE_SIGN_IN, get_handle_sign_in(hass), schema=SERVICE_SCHEMA_SIGN_IN)
