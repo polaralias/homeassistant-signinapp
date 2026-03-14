@@ -13,7 +13,8 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .const import DOMAIN, CONF_REMOTE_SITE_ID, CONF_OFFICE_SITE_ID
+from .const import DOMAIN
+from .logic import resolve_sensor_site_id, resolve_sensor_state
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -48,8 +49,9 @@ async def async_setup_entry(
     )
 
     await coordinator.async_config_entry_first_refresh()
+    hass.data[DOMAIN][entry.entry_id]["coordinator"] = coordinator
 
-    async_add_entities([SignInAppSensor(coordinator, entry)], True)
+    async_add_entities([SignInAppSensor(hass, coordinator, entry)], True)
 
 class SignInAppSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Sign In App Sensor."""
@@ -58,9 +60,10 @@ class SignInAppSensor(CoordinatorEntity, SensorEntity):
     _attr_has_entity_name = False
     _attr_icon = "mdi:account-badge"
 
-    def __init__(self, coordinator, entry):
+    def __init__(self, hass, coordinator, entry):
         """Initialize the sensor."""
         super().__init__(coordinator)
+        self.hass = hass
         self.entry = entry
 
         # Use entry.unique_id if available (Visitor ID), else fallback to entry_id
@@ -83,32 +86,13 @@ class SignInAppSensor(CoordinatorEntity, SensorEntity):
     @property
     def native_value(self):
         """Return the state of the sensor."""
-        data = self.coordinator.data
-        if not data:
-            return None
-
-        returning_visitor = data.get("returningVisitor")
-        if returning_visitor:
-            status = returning_visitor.get("status")
-            if status:
-                status = status.lower()
-                site_id = str(returning_visitor.get("siteId")) if returning_visitor.get("siteId") else None
-                remote_site_id = str(self.entry.data.get(CONF_REMOTE_SITE_ID)) if self.entry.data.get(CONF_REMOTE_SITE_ID) else None
-                office_site_id = str(self.entry.data.get(CONF_OFFICE_SITE_ID)) if self.entry.data.get(CONF_OFFICE_SITE_ID) else None
-
-                if status == "signed_in":
-                    if site_id and site_id == remote_site_id:
-                        return "signed_in_remote"
-                    if site_id and site_id == office_site_id:
-                        return "signed_in_office"
-                elif status == "signed_out":
-                    if site_id and site_id == remote_site_id:
-                        return "signed_out_remote"
-                    if site_id and site_id == office_site_id:
-                        return "signed_out_office"
-
-                return status
-        return "unknown"
+        entry_data = self.hass.data[DOMAIN][self.entry.entry_id]
+        return resolve_sensor_state(
+            self.coordinator.data,
+            self.entry.data,
+            entry_data.get("current_session"),
+            entry_data.get("last_session"),
+        )
 
     @property
     def extra_state_attributes(self):
@@ -121,10 +105,15 @@ class SignInAppSensor(CoordinatorEntity, SensorEntity):
         if not returning_visitor:
             return {}
 
+        entry_data = self.hass.data[DOMAIN][self.entry.entry_id]
         return {
             "last_in": returning_visitor.get("lastIn"),
             "last_out": returning_visitor.get("lastOut"),
-            "site_id": returning_visitor.get("siteId"),
+            "site_id": resolve_sensor_site_id(
+                data,
+                entry_data.get("current_session"),
+                entry_data.get("last_session"),
+            ),
             "name": returning_visitor.get("name"),
             "group_id": returning_visitor.get("groupId"),
         }

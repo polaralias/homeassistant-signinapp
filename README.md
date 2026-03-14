@@ -40,10 +40,10 @@ This is a custom integration for [Home Assistant](https://www.home-assistant.io/
     *   Enter your **Companion Code**. You can generate this from the Sign In App portal or mobile app (check the email invitation or your profile settings).
 4.  **Site Configuration**:
     *   The integration will fetch available sites associated with your account.
-    *   **Remote Site ID**: Enter the ID for your Remote site (displayed in the setup dialog).
-    *   **Office Site ID**: Enter the ID for your Office site (displayed in the setup dialog).
+    *   **Remote Site**: Choose your Remote site from the detected list. The flow will preselect it when the API clearly identifies one.
+    *   **Office Site**: Choose your Office site from the detected list. The flow will preselect it when the API clearly identifies one.
     *   **Person Tracker**: Select the `person` entity that represents you. This is used to determine your location when signing in to the Office.
-    *   **Office Distance**: Set the radius (in meters) for considering you "at the office". Default is 50m.
+    *   **Office Distance**: Set the radius (in meters) for considering you "at the office". The flow defaults this to the office geofence radius when the site exposes one.
 
 ## Usage
 

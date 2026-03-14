@@ -10,3 +10,8 @@ CONF_OFFICE_DISTANCE = "office_distance"
 DEFAULT_OFFICE_DISTANCE = 50
 
 API_BASE_URL = "https://backend.signinapp.com/api/mobile"
+
+SESSION_STORE_VERSION = 1
+SESSION_STORE_KEY = f"{DOMAIN}_sessions"
+SESSION_STORE_HASS_KEY = f"{DOMAIN}_session_store"
+SESSION_STATE_HASS_KEY = f"{DOMAIN}_session_state"

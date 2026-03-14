@@ -4,6 +4,7 @@ import aiohttp
 from typing import Optional, Dict, Any
 
 from .const import API_BASE_URL
+from .logic import normalize_companion_code
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -47,7 +48,11 @@ class SignInAppApi:
         if "authorization" in headers:
             del headers["authorization"]
 
-        payload = {"code": code}
+        normalized_code = normalize_companion_code(code)
+        if not normalized_code:
+            raise ValueError("Companion code is empty after normalization.")
+
+        payload = {"code": normalized_code}
 
         _LOGGER.debug("Connect request: %s %s", url, payload)
         async with self._session.post(url, headers=headers, json=payload) as response:
