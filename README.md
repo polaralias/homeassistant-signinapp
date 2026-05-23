@@ -34,6 +34,7 @@ Current product boundary:
 ## Start here
 
 - Maintainer rules: [AGENTS.md](AGENTS.md)
+- Domain language: [GLOSSARY.md](GLOSSARY.md)
 - Contributor guide: [CONTRIBUTING.md](CONTRIBUTING.md)
 - Architecture: [ARCHITECTURE.md](ARCHITECTURE.md)
 - Product intent: [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md)

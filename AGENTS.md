@@ -24,6 +24,7 @@ Agents working in this repo should optimize for:
 ## Documentation map
 
 - [README.md](README.md)
+- [GLOSSARY.md](GLOSSARY.md)
 - [ARCHITECTURE.md](ARCHITECTURE.md)
 - [docs/DESIGN.md](docs/DESIGN.md)
 - [docs/PLANS.md](docs/PLANS.md)

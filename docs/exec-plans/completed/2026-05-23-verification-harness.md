@@ -32,7 +32,7 @@ Primary harness surfaces:
 
 Canonical behavior and model docs:
 
-- [CONTEXT.md](../../../CONTEXT.md)
+- [GLOSSARY.md](../../../GLOSSARY.md)
 - [ARCHITECTURE.md](../../../ARCHITECTURE.md)
 - [docs/RELIABILITY.md](../../RELIABILITY.md)
 - [docs/decisions/2026-05-23-open-ended-location-model.md](../../decisions/2026-05-23-open-ended-location-model.md)
