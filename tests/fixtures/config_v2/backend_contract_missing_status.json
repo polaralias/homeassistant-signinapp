@@ -1,0 +1,23 @@
+{
+  "returningVisitor": {
+    "name": "Sanitized Visitor",
+    "groupId": 9001,
+    "lastIn": "2026-05-16T08:30:00Z",
+    "lastOut": "2026-05-15T17:00:00Z"
+  },
+  "currentVisit": {
+    "siteId": 100
+  },
+  "sites": [
+    {
+      "id": 100,
+      "name": "HQ",
+      "type": "office"
+    },
+    {
+      "id": 200,
+      "name": "Remote",
+      "type": "remote"
+    }
+  ]
+}

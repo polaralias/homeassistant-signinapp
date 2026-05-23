@@ -1,4 +1,10 @@
 {
+  "issues": {
+    "config_drift_detected": {
+      "title": "Sign In App configuration drift detected",
+      "description": "The backend-discovered site configuration no longer matches the saved Sign In App routing setup.\n\nCurrent drift: {details}\n\nReview the integration configuration to confirm or update the saved work-location routing."
+    }
+  },
   "config": {
     "step": {
       "user": {
@@ -12,10 +18,7 @@
         "title": "Configure Sites",
         "description": "{site_fetch_status}\n\nAvailable Sites:\n{sites_list}",
         "data": {
-          "remote_site_id": "Remote site",
-          "office_site_id": "Office site",
-          "device_tracker": "Person tracker",
-          "office_distance": "Office distance"
+          "device_tracker": "Person tracker"
         }
       },
       "reconfigure": {
@@ -25,7 +28,6 @@
     },
     "error": {
       "connect_error": "Failed to connect with the provided code. Please check and try again.",
-      "duplicate_sites": "Remote and Office must be different sites.",
       "site_selection_invalid": "Choose valid sites before continuing."
     },
     "abort": {
@@ -40,10 +42,6 @@
         "state": {
           "signed_in": "Signed In",
           "signed_out": "Signed Out",
-          "signed_in_remote": "Signed In - Remote",
-          "signed_in_office": "Signed In - Office",
-          "signed_out_remote": "Signed Out - Remote",
-          "signed_out_office": "Signed Out - Office",
           "unknown": "Unknown"
         }
       }

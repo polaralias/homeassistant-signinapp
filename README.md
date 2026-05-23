@@ -1,75 +1,77 @@
-# <img src="custom_components/signinapp/brand/icon.png" width="48" height="48" align="center" alt="Sign In App Icon"> Home Assistant Sign In App Integration
+# Home Assistant Sign In App Integration
 
-![Sign In App Brand Logo](custom_components/signinapp/brand/logo.png)
+This repository contains a Home Assistant custom integration for Sign In App.
 
-This is a custom integration for [Home Assistant](https://www.home-assistant.io/) that connects to [Sign In App](https://signinapp.com/). It allows you to manage sign-ins and sign-outs, track your status, and automate actions based on your Sign In App status.
+Its product purpose is reliable Sign In App attendance automation and state visibility through Home Assistant.
 
-## Features
+The project goal is:
 
--   **Sign In / Sign Out**: Services to sign in or out of your configured sites directly from Home Assistant.
--   **Site Types**: Supports both 'Office' and 'Remote' site types.
--   **Status Tracking**: Sensor entity that reflects your current status (e.g., Signed In (Office), Signed In (Remote), Signed Out).
--   **Authentication**: Uses a secure companion code for initial authentication.
--   **Location Integration**: Uses a configurable `person` entity for location data during Office sign-ins.
+- let Home Assistant know whether a user is signed in or out of Sign In App
+- let Home Assistant sign users in and out across their supported work locations
+- make attendance across user work locations automatable from Home Assistant presence and scripts
+- provide a first-class setup flow for account connection, work location selection, and attendance routing behavior
+
+This repository is a test-backed, documented Home Assistant custom integration for Sign In App.
+
+## What exists today
+
+- Home Assistant config flow authentication using a companion code
+- backend-discovered configured-location selection with inclusion and label override fields
+- per-location `coordinate_behavior` stored durably and used for runtime location resolution
+- concrete `site_id` action input support, with legacy `site_type` hints retained for compatibility
+- compatibility `site_type` hints now require a unique configured match or active-session disambiguation; they no longer pick the first matching target
+- `signinapp.sign_in` and `signinapp.sign_out` services
+- a polling sensor with canonical `signed_in` / `signed_out` / `unknown` state classes
+- sanitized fixture-backed logic harness for the reverse-engineered backend contract
+- CI that runs the checked-in regression harness on every push and pull request
+
+Current product boundary:
+
+- `site_id` is the primary action surface
+- `site_type` remains supported as a compatibility-only hint surface
+- per-location routing semantics are intentionally limited to `device_tracker` and `remote_zero`
+
+## Start here
+
+- Maintainer rules: [AGENTS.md](AGENTS.md)
+- Contributor guide: [CONTRIBUTING.md](CONTRIBUTING.md)
+- Architecture: [ARCHITECTURE.md](ARCHITECTURE.md)
+- Product intent: [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md)
+- Reliability goals: [docs/RELIABILITY.md](docs/RELIABILITY.md)
+- Security model: [docs/SECURITY.md](docs/SECURITY.md)
+- Active execution plans: [docs/PLANS.md](docs/PLANS.md)
 
 ## Installation
 
-### HACS (Recommended)
+### HACS
 
-1.  Ensure you have [HACS](https://hacs.xyz/) installed.
-2.  Add this repository as a custom repository in HACS:
-    *   Go to **HACS** -> **Integrations**.
-    *   Click the 3 dots in the top right corner and select **Custom repositories**.
-    *   Enter the URL of this repository.
-    *   Select **Integration** as the category.
-    *   Click **Add**.
-3.  Search for "Sign In App" in HACS and install it.
-4.  Restart Home Assistant.
+1. Add this repository to HACS as an `Integration`.
+2. Install `Sign In App`.
+3. Restart Home Assistant.
 
-### Manual Installation
+### Manual
 
-1.  Download the `custom_components/signinapp` directory from this repository.
-2.  Copy the `signinapp` directory to your Home Assistant `custom_components` directory.
-3.  Restart Home Assistant.
+1. Copy `custom_components/signinapp` into your Home Assistant `custom_components` directory.
+2. Restart Home Assistant.
 
 ## Configuration
 
-1.  Navigate to **Settings** -> **Devices & Services**.
-2.  Click **Add Integration** and search for "Sign In App".
-3.  **Authentication**:
-    *   Enter your **Companion Code**. You can generate this from the Sign In App portal or mobile app (check the email invitation or your profile settings).
-4.  **Site Configuration**:
-    *   The integration will fetch available sites associated with your account.
-    *   **Remote Site**: Choose your Remote site from the detected list. The flow will preselect it when the API clearly identifies one.
-    *   **Office Site**: Choose your Office site from the detected list. The flow will preselect it when the API clearly identifies one.
-    *   **Person Tracker**: Select the `person` entity that represents you. This is used to determine your location when signing in to the Office.
-    *   **Office Distance**: Set the radius (in meters) for considering you "at the office". The flow defaults this to the office geofence radius when the site exposes one.
+1. In Home Assistant, open `Settings -> Devices & Services`.
+2. Add the `Sign In App` integration.
+3. Enter a companion code.
+4. Configure the work locations the integration should manage for the user.
+5. Select the `person` entity that represents the user.
 
-## Usage
+## Current status
 
-### Entities
+The development harness now lives in [tests/test_logic.py](tests/test_logic.py), [tests/test_runtime.py](tests/test_runtime.py), [tests/test_config_flow.py](tests/test_config_flow.py), [tests/test_lifecycle.py](tests/test_lifecycle.py), [tests/fixtures/config_v2](tests/fixtures/config_v2), and [.github/workflows/python-tests.yml](.github/workflows/python-tests.yml).
 
-The integration creates a sensor entity for the configured user:
-*   `sensor.signinapp_<name>`: Shows the current state (e.g., `Signed In (Office)`, `Signed In (Remote)`, `Signed Out`).
+Run it locally with:
 
-### Services
+```powershell
+python -m unittest discover -s tests -p "test_*.py"
+```
 
-You can use the following services in your automations and scripts:
+On Windows, the full Home Assistant lifecycle module can take several minutes to complete.
 
-#### `signinapp.sign_in`
-Signs the user in.
-
-| Field | Description | Required | Options |
-| :--- | :--- | :--- | :--- |
-| **Site Type** | The type of site to sign in to. | Yes | `Office`, `Remote` |
-
-**Note**:
-*   **Office**: Uses the latitude/longitude from your configured `person` entity.
-*   **Remote**: Uses 0 for latitude/longitude.
-
-#### `signinapp.sign_out`
-Signs the user out.
-
-| Field | Description | Required | Options |
-| :--- | :--- | :--- | :--- |
-| **Site Type** | The type of site to sign out from. If omitted, the integration attempts to auto-detect the context. | No | `Office`, `Remote` |
+Read the completed harness note in [docs/exec-plans/completed/2026-05-23-verification-harness.md](docs/exec-plans/completed/2026-05-23-verification-harness.md). Supporting observed evidence remains under [docs/references](docs/references).

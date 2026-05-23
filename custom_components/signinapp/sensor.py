@@ -13,8 +13,9 @@ from homeassistant.helpers.update_coordinator import (
     UpdateFailed,
 )
 
-from .const import DOMAIN
-from .logic import resolve_sensor_site_id, resolve_sensor_state
+from . import async_sync_config_drift_issue
+from .const import DOMAIN, RUNTIME_STATUS_REASON_KEY
+from .logic import resolve_sensor_attributes, resolve_sensor_state
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -34,6 +35,7 @@ async def async_setup_entry(
         _LOGGER.debug("Fetching sensor data from API")
         try:
             data = await api.get_config()
+            async_sync_config_drift_issue(hass, entry, data)
             _LOGGER.debug("Sensor data fetched successfully")
             return data
         except Exception as err:
@@ -43,6 +45,7 @@ async def async_setup_entry(
     coordinator = DataUpdateCoordinator(
         hass,
         _LOGGER,
+        config_entry=entry,
         name="signinapp_sensor",
         update_method=async_update_data,
         update_interval=SCAN_INTERVAL,
@@ -97,26 +100,17 @@ class SignInAppSensor(CoordinatorEntity, SensorEntity):
     @property
     def extra_state_attributes(self):
         """Return the state attributes."""
-        data = self.coordinator.data
-        if not data:
-            return {}
-
-        returning_visitor = data.get("returningVisitor")
-        if not returning_visitor:
-            return {}
-
         entry_data = self.hass.data[DOMAIN][self.entry.entry_id]
-        return {
-            "last_in": returning_visitor.get("lastIn"),
-            "last_out": returning_visitor.get("lastOut"),
-            "site_id": resolve_sensor_site_id(
-                data,
-                entry_data.get("current_session"),
-                entry_data.get("last_session"),
-            ),
-            "name": returning_visitor.get("name"),
-            "group_id": returning_visitor.get("groupId"),
-        }
+        attributes = resolve_sensor_attributes(
+            self.coordinator.data,
+            self.entry.data,
+            entry_data.get("current_session"),
+            entry_data.get("last_session"),
+        )
+        runtime_reason = entry_data.get(RUNTIME_STATUS_REASON_KEY)
+        if runtime_reason is not None and attributes.get("status_reason") is None:
+            attributes["status_reason"] = runtime_reason
+        return attributes
 
     @property
     def device_info(self) -> DeviceInfo:

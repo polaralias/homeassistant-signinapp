@@ -1,0 +1,9 @@
+{
+  "returningVisitor": {
+    "status": "signed_in",
+    "lastIn": "2026-05-16T08:30:00Z",
+    "lastOut": "2026-05-15T17:00:00Z",
+    "name": "Sanitized Visitor",
+    "groupId": 9001
+  }
+}

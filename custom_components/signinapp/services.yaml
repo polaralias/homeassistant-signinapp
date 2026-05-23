@@ -1,11 +1,19 @@
 sign_in:
   name: Sign In
-  description: Sign in to a specific site type.
+  description: Sign in to a configured location by concrete site ID or compatibility site type.
   fields:
+    site_id:
+      name: Site ID
+      description: Preferred explicit configured site ID to sign in to.
+      required: false
+      selector:
+        number:
+          min: 1
+          mode: box
     site_type:
       name: Site Type
-      description: The type of site to sign in to (office or remote).
-      required: true
+      description: Compatibility hint for the type of site to sign in to when a concrete site ID is not provided.
+      required: false
       selector:
         select:
           options:
@@ -23,11 +31,19 @@ sign_in:
 
 sign_out:
   name: Sign Out
-  description: Sign out from the current site.
+  description: Sign out from the current site, or from a configured location by concrete site ID or compatibility site type.
   fields:
+    site_id:
+      name: Site ID
+      description: Preferred explicit configured site ID to sign out from.
+      required: false
+      selector:
+        number:
+          min: 1
+          mode: box
     site_type:
       name: Site Type
-      description: The type of site to sign out from (optional, auto-detected if not provided).
+      description: Compatibility hint for the type of site to sign out from when a concrete site ID is not provided.
       required: false
       selector:
         select:

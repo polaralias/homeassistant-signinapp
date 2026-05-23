@@ -1,0 +1,38 @@
+{
+  "returningVisitor": {
+    "status": "signed_in",
+    "lastIn": "2026-05-16T08:30:00Z",
+    "lastOut": "2026-05-15T17:00:00Z",
+    "name": "Sanitized Visitor",
+    "groupId": 9001
+  },
+  "currentVisit": {
+    "siteId": 100
+  },
+  "sites": [
+    {
+      "id": 100,
+      "name": "HQ",
+      "type": "office",
+      "location": {
+        "position": {
+          "lat": 51.5007,
+          "lng": -0.1246
+        },
+        "radius": 50
+      }
+    },
+    {
+      "id": 200,
+      "name": "Remote",
+      "type": "remote",
+      "location": {
+        "position": {
+          "lat": 0.0,
+          "lng": 0.0
+        },
+        "radius": 0
+      }
+    }
+  ]
+}
