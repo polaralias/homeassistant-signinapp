@@ -1,38 +1,39 @@
 # Contributing
 
-## Local test command
+Use [AGENTS.md](AGENTS.md) as the repo-specific operating guide. This file defines the shared Git and release workflow expected across Polaralias repositories.
 
-Run the checked-in harness with:
+## Branch Workflow
 
-```powershell
-python -m unittest discover -s tests -p "test_*.py"
-```
+- branch from `main`
+- do not commit directly to `main`
+- use short-lived branches named `feat/...`, `fix/...`, `docs/...`, `chore/...`, `refactor/...`, or `test/...`
+- keep one logical change per branch and pull request
+- rebase or merge `main` into your branch before merge if it has drifted
 
-On Windows, expect the lifecycle module to dominate runtime. The full command is still the canonical publish-check, but it may take several minutes.
+## Pull Requests
 
-## What the harness covers
+- open a pull request for every merge into `main`, including solo work
+- use draft pull requests for partial work and mark them ready only when the branch is reviewable
+- summarize the behavior change, validation performed, and docs touched
+- prefer squash merge unless preserving multiple commits has durable review value
+- delete the merged or closed feature branch after the work is finished; never delete `main`
 
-The repository test suite includes:
+## Releases
 
-- pure logic regression tests
-- runtime service and sensor tests
-- config-flow tests
-- Home Assistant lifecycle tests
+- use tags in `vX.Y.Z` format for releases
+- pushes to `main` update the draft release notes
+- pushing a `vX.Y.Z` tag publishes or refreshes the corresponding GitHub Release
+- do not move or reuse published release tags
 
-Read [docs/exec-plans/completed/2026-05-23-verification-harness.md](docs/exec-plans/completed/2026-05-23-verification-harness.md) for the completed harness scope.
+## Licensing
 
-## Windows notes
+- by contributing, you agree your changes are licensed under `Apache-2.0`
+- preserve copyright and license notices in forks and redistributions
 
-On Windows, the Home Assistant lifecycle tests rely on test-environment shims required by Home Assistant and its dependencies:
+## Verification
 
-- selector-loop policy for `aiodns`
-- `os.fchmod` shim for Home Assistant storage writes
-
-These are treated as test-environment requirements, not integration defects.
-
-## Contribution rules
-
-- prefer small test-backed changes
-- preserve sanitized contract evidence
-- update canonical docs when product behavior changes
-- do not store secrets, companion codes, or unsanitized captures in the repo
+- the canonical local harness is `python -m unittest discover -s tests -p "test_*.py"`
+- on Windows, expect the lifecycle module tests to dominate runtime
+- run the smallest relevant local test, lint, or build path before opening a pull request
+- when behavior changes, update tests and documentation in the same branch
+- never commit secrets, machine-local credentials, or unredacted personal data
