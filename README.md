@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="custom_components/signinapp/brand/logo.png" alt="Sign In App logo" width="320" />
+</p>
+
 # Home Assistant Sign In App Integration
 
 This repository contains a Home Assistant custom integration for Sign In App.
@@ -46,9 +50,11 @@ Current product boundary:
 
 ### HACS
 
-1. Add this repository to HACS as an `Integration`.
-2. Install `Sign In App`.
-3. Restart Home Assistant.
+1. Open **HACS -> Integrations**.
+2. Open the three-dot menu and choose **Custom repositories**.
+3. Add this repository URL and choose **Integration**.
+4. Install **Sign In App**.
+5. Restart Home Assistant.
 
 ### Manual
 
