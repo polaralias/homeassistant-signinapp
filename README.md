@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="custom_components/signinapp/brand/logo.png" alt="Sign In App logo" width="320" />
+  <img src="Sign%20In%20App%20Banner.png" alt="Sign In App banner" width="960" />
 </p>
 
 # Home Assistant Sign In App Integration
