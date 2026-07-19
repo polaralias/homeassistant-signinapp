@@ -2,23 +2,23 @@
 
 ## Purpose
 
-This repository is being hardened from a working personal integration into a public, maintainable engineering artifact.
+This repository is being hardened from a working personal integration into a public, maintainable engineering artefact.
 
-Agents working in this repo should optimize for:
+Agents working in this repo should optimise for:
 
-1. Verified behavior over plausible code.
+1. Verified behaviour over plausible code.
 2. Documentation that describes intended end state, not just current implementation.
 3. Small, testable changes over broad rewrites.
 4. Preserving evidence when reverse-engineering the Sign In App contract.
 
 ## Working rules
 
-- Treat Home Assistant runtime behavior as unverified until tested.
-- Treat Sign In App backend behavior as unstable unless captured in a dated verification artifact.
+- Treat Home Assistant runtime behaviour as unverified until tested.
+- Treat Sign In App backend behaviour as unstable unless captured in a dated verification artefact.
 - Prefer adding or updating docs when a fact is discovered.
-- Prefer fixtures and tests over prose when a contract can be mechanized.
+- Prefer fixtures and tests over prose when a contract can be mechanised.
 - Do not hardcode secrets, tokens, companion codes, or personal data into the repo.
-- Sanitize captured API artifacts before storing them.
+- Sanitise captured API artefacts before storing them.
 - Keep README concise and point readers to the structured docs set.
 
 ## Documentation map
@@ -37,9 +37,9 @@ Agents working in this repo should optimize for:
 
 The repository is now in public-release maintenance mode:
 
-- preserve verified behavior as the primary acceptance bar
+- preserve verified behaviour as the primary acceptance bar
 - keep canonical docs aligned with checked-in code and tests
-- periodically re-verify the unstable backend contract and record sanitized evidence
+- periodically re-verify the unstable backend contract and record sanitised evidence
 - prefer bounded reliability, packaging, and publish-safety improvements over broad rewrites
 
 ## Shared Git Workflow

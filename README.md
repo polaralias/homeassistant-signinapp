@@ -4,7 +4,7 @@
 
 # Home Assistant Sign In App Integration
 
-This repository provides a Home Assistant custom integration for Sign In App, focused on attendance automation and work-location-aware sign-in and sign-out flows.
+This repository provides a Home Assistant custom integration for Sign In App, focussed on attendance automation and work-location-aware sign-in and sign-out flows.
 
 ## What It Does
 
@@ -16,7 +16,7 @@ The integration connects Home Assistant to Sign In App so you can see attendance
 - configured work-location selection
 - `signinapp.sign_in` and `signinapp.sign_out` services
 - polling sensor for signed-in, signed-out, and unknown state
-- per-location routing behavior stored in the integration configuration
+- per-location routing behaviour stored in the integration configuration
 
 ## Installation
 
@@ -49,4 +49,4 @@ Start with:
 - [docs/PRODUCT_SENSE.md](docs/PRODUCT_SENSE.md)
 - [docs/RELIABILITY.md](docs/RELIABILITY.md)
 
-For repository workflow and agent-focused context, read [AGENTS.md](AGENTS.md).
+For repository workflow and agent-focussed context, read [AGENTS.md](AGENTS.md).

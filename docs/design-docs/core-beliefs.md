@@ -2,7 +2,7 @@
 
 ## Belief 1: The repo should describe the intended system, not just the inherited one
 
-Documentation should state desired behavior clearly enough that a maintainer can detect when the implementation falls short.
+Documentation should state desired behaviour clearly enough that a maintainer can detect when the implementation falls short.
 
 ## Belief 2: Reverse-engineered contracts need evidence, not confidence
 

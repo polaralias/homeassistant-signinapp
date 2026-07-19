@@ -24,14 +24,14 @@ The primary visible state should remain one user attendance entity, even when mu
 
 This repo owns:
 
-- Home Assistant integration behavior
+- Home Assistant integration behaviour
 - first-class setup and configuration flow
 - translation of Home Assistant context into Sign In App requests
 - translation of Sign In App responses into Home Assistant state
 
 This repo does not own:
 
-- Sign In App backend behavior
+- Sign In App backend behaviour
 - Sign In App companion frontend
 - enterprise policy around attendance
 
@@ -49,4 +49,4 @@ This repo does not own:
 - open-ended support for work locations available to the user from Sign In App
 - first-class dynamic configuration based on backend-discovered locations
 - backend-discovered names offered as defaults, with user-overridable labels
-- stable backend identities drive behavior while mutable labels serve UX only
+- stable backend identities drive behaviour while mutable labels serve UX only
