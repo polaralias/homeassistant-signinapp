@@ -63,15 +63,15 @@ The minimum durable routing semantics for a configured work location are:
 - stable backend identity
 - user-facing label
 - inclusion or enabled state
-- coordinate-behavior semantics
+- coordinate-behaviour semantics
 - any location-specific parameter required by those semantics
 
-The currently supported coordinate-behavior set is intentionally small:
+The currently supported coordinate-behaviour set is intentionally small:
 
 - `device_tracker`
 - `remote_zero`
 
-No third coordinate-behavior mode is currently in scope until a concrete real-world Sign In App scenario requires one.
+No third coordinate-behaviour mode is currently in scope until a concrete real-world Sign In App scenario requires one.
 
 ### Work-location label
 

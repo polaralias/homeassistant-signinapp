@@ -14,7 +14,7 @@ The backend contract is still reverse-engineered, but the critical current-state
 
 ### Runtime verification: 8/10
 
-Pure logic, service handlers, config flow, sensor projection, mutation refresh, and Home Assistant lifecycle behavior now have a sanitized regression harness and CI entrypoint.
+Pure logic, service handlers, config flow, sensor projection, mutation refresh, and Home Assistant lifecycle behaviour now have a sanitised regression harness and CI entrypoint.
 
 ### Repository hygiene: 8/10
 
@@ -28,5 +28,5 @@ The repository is public-ready and maintainable, with remaining risk concentrate
 
 Maintain confidence by:
 
-1. periodically re-verifying the live backend contract and sanitizing any new evidence
+1. periodically re-verifying the live backend contract and sanitising any new evidence
 2. tightening packaging and release ergonomics as the public integration surface matures

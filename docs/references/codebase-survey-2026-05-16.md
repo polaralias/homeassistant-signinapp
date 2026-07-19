@@ -17,7 +17,7 @@
 - repository hygiene is immature
 - tests are narrow
 - no Home Assistant runtime harness
-- previous documentation did not separate verified behavior from desired behavior
+- previous documentation did not separate verified behaviour from desired behaviour
 
 ## Most important technical observation
 

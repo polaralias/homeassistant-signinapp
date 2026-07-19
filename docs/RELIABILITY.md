@@ -8,7 +8,7 @@ The integration should produce the same sign-in, sign-out, and state-resolution 
 
 ### Verified inputs beat folklore
 
-Backend payload interpretation should be driven by captured evidence, not remembered behavior.
+Backend payload interpretation should be driven by captured evidence, not remembered behaviour.
 
 ### Cached context is a fallback, not a lie generator
 
@@ -40,7 +40,7 @@ Sign-in should be explicit-first and simple.
 
 Sign-out may require inference because the integration must safely recover which work location is currently active even when the backend response is partial.
 
-Signed-out should be modeled as absence of an active work location, not as another configured target state.
+Signed-out should be modelled as absence of an active work location, not as another configured target state.
 
 This asymmetry means sign-in and sign-out should remain distinct verbs, not a flattened generic target-setting operation.
 
@@ -57,15 +57,15 @@ The minimum durable routing metadata set should be:
 - stable backend identity
 - user-facing label
 - inclusion or enabled state
-- coordinate-behavior semantics
+- coordinate-behaviour semantics
 - any location-specific parameter required by those semantics
 
-The current supported coordinate-behavior set is:
+The current supported coordinate-behaviour set is:
 
 - `device_tracker`
 - `remote_zero`
 
-No additional coordinate-behavior modes should be implemented without a concrete scenario and explicit rule definition.
+No additional coordinate-behaviour modes should be implemented without a concrete scenario and explicit rule definition.
 
 Runtime invalidity should be surfaced as runtime state, not silently converted into config mutation.
 
@@ -123,10 +123,10 @@ Drift should be surfaced through an admin-facing issue and resolved through reco
 
 ## Current reliability risks
 
-- service behavior depends on cached local session state
+- service behaviour depends on cached local session state
 - the backend contract remains non-public and may drift without notice
 - live contract re-verification still depends on disciplined local operator capture outside the checked-in harness
-- the repeatable fixture suite covers pure logic, service-handler routing, sensor projection, focused config-flow behavior, and Home Assistant lifecycle behavior, but it cannot guarantee future backend stability on its own
+- the repeatable fixture suite covers pure logic, service-handler routing, sensor projection, focussed config-flow behaviour, and Home Assistant lifecycle behaviour, but it cannot guarantee future backend stability on its own
 - full end-to-end Home Assistant platform loading on Windows currently relies on environment-level resolver and file-permission shims for `aiodns` selector-loop requirements and missing `os.fchmod`; for this repo they are treated as Home Assistant test-environment prerequisites, not integration-owned defects
 
 ## Desired end state
@@ -135,20 +135,20 @@ Drift should be surfaced through an admin-facing issue and resolved through reco
 - service actions verified by post-action state checks
 - attendance-routing precedence represented in tests and docs
 - sign-in and sign-out routing asymmetry represented in tests and docs
-- signed-out absence and sign-out inference behavior represented in tests and docs
+- signed-out absence and sign-out inference behaviour represented in tests and docs
 - backend-versus-cache conflict resolution represented in tests and docs
 - authoritative backend field handling represented in tests and docs
 - configured-target authority represented in tests and docs
 - durable-config versus transient-runtime-state boundaries represented in tests and docs
 - rediscovery versus shadow-persistence of unselected work locations represented in tests and docs
 - runtime invalidity versus durable inclusion state represented in tests and docs
-- fail-hard versus hint-level fallback behavior represented in tests and docs
+- fail-hard versus hint-level fallback behaviour represented in tests and docs
 - canonical status classes represented in tests and docs
 - `unknown` reason handling represented in tests and docs
 - active and last-active work-location attributes represented in tests and docs
 - operational `status_reason` categories represented in tests and docs
-- last-active operational behavior represented in tests and docs
+- last-active operational behaviour represented in tests and docs
 - drift detection, admin-facing surfacing, and reconfiguration review represented in tests and docs
 - location-qualified status variants removed or deliberately constrained as presentation only
-- restart and stale-cache behavior tested explicitly
+- restart and stale-cache behaviour tested explicitly
 - contract drift detectable by failing tests or fixture review

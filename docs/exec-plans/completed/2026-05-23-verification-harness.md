@@ -10,12 +10,12 @@ The repository now has checked-in executable coverage for:
 
 - fixture-backed backend contract interpretation
 - sensor projection for canonical `signed_in`, `signed_out`, and `unknown`
-- sign-in and sign-out routing behavior
+- sign-in and sign-out routing behaviour
 - config-flow site selection and reconfiguration drift handling
 - persisted-session recovery after restart-like setup
 - post-mutation coordinator refresh and state verification
 - admin-facing drift issue surfacing without durable-config mutation
-- open-ended configured-location persistence with per-location coordinate behavior
+- open-ended configured-location persistence with per-location coordinate behaviour
 - compatibility-hint ambiguity rules
 - legacy config-entry migration onto `configured_locations`
 
@@ -30,7 +30,7 @@ Primary harness surfaces:
 - [tests/fixtures/config_v2](../../../tests/fixtures/config_v2)
 - [.github/workflows/python-tests.yml](../../../.github/workflows/python-tests.yml)
 
-Canonical behavior and model docs:
+Canonical behaviour and model docs:
 
 - [GLOSSARY.md](../../../GLOSSARY.md)
 - [ARCHITECTURE.md](../../../ARCHITECTURE.md)
@@ -39,5 +39,5 @@ Canonical behavior and model docs:
 
 ## Notes
 
-- Windows lifecycle verification still requires Home Assistant test-environment shims for `aiodns` selector-loop behavior and `os.fchmod`.
+- Windows lifecycle verification still requires Home Assistant test-environment shims for `aiodns` selector-loop behaviour and `os.fchmod`.
 - Any future routing-semantic expansion must start from a concrete Sign In App scenario and a new explicit decision.

@@ -2,9 +2,9 @@
 
 ## Scope
 
-This file records observed backend behavior from a live authenticated session on 2026-05-16.
+This file records observed backend behaviour from a live authenticated session on 2026-05-16.
 
-All secrets and personal data are sanitized.
+All secrets and personal data are sanitised.
 
 ## Observed endpoints
 
@@ -19,7 +19,7 @@ All secrets and personal data are sanitized.
 
 ## Minimal confirmed auth model
 
-- `connect` accepts a normalized companion code
+- `connect` accepts a normalised companion code
 - authenticated requests use `Authorization: Bearer <token>`
 - `reconnect` returns a fresh token
 

@@ -33,8 +33,8 @@ Sign-in and sign-out remain distinct verbs in the product model. They do not col
 - configured work locations are not separate primary attendance entities
 - configured available target states define the authoritative action-target universe
 - configured target records persist durable routing metadata, not transient backend state
-- the minimum durable routing metadata per configured work location is stable backend identity, user label, inclusion state, coordinate-behavior semantics, and any required location-specific parameter
-- the current coordinate-behavior set is limited to `device_tracker` and `remote_zero` unless a concrete new Sign In App scenario requires another mode
+- the minimum durable routing metadata per configured work location is stable backend identity, user label, inclusion state, coordinate-behaviour semantics, and any required location-specific parameter
+- the current coordinate-behaviour set is limited to `device_tracker` and `remote_zero` unless a concrete new Sign In App scenario requires another mode
 - unselected discovered work locations are rediscovered later rather than stored as durable shadow configuration
 - signed out is absence of an active work location, not another configured target state
 - backend drift does not silently rewrite durable config; it is surfaced to an administrator and resolved in reconfiguration
@@ -62,8 +62,8 @@ The initial operational `status_reason` set is:
 - attendance routing uses the correct location semantics for the resolved target
 - attendance routing applies explicit action input first, then live backend state, then cached local session state as fallback
 - sign-in remains explicit-first, while sign-out may infer the active work location when explicit input is absent
-- sign-in and sign-out remain distinct verbs with different routing behavior
-- explicit action input can transition from routing hints toward concrete work-location identity
+- sign-in and sign-out remain distinct verbs with different routing behaviour
+- explicit action input can transition from routing hints towards concrete work-location identity
 - compatibility hints remain supported, but concrete work-location identity is the primary product surface
 - the transition action surface supports concrete work-location identity first, then sign-out inference without explicit target, then routing-hint compatibility inputs
 - concrete-target actions fail when the chosen configured target is temporarily unusable
@@ -88,9 +88,9 @@ The initial operational `status_reason` set is:
 - wrong work location selected for sign-out
 - stale sensor state after restart
 - backend current-site field changes and integration silently guesses
-- setup succeeds but later automation behavior is unreliable
+- setup succeeds but later automation behaviour is unreliable
 
-## Reconfiguration behavior
+## Reconfiguration behaviour
 
 When backend-discovered routing hints change later, the integration should preserve user-confirmed durable routing semantics by default.
 

@@ -11,7 +11,7 @@ Its design problem is integration design:
 Design priorities:
 
 1. Make the product model obvious.
-2. Make verified behavior distinguishable from inferred behavior.
+2. Make verified behaviour distinguishable from inferred behaviour.
 3. Keep the contributor path short: understand, verify, change, test.
 
 For design principles, see:

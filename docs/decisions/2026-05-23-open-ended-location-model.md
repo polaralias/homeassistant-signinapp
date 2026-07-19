@@ -36,9 +36,9 @@ Current supported values are:
 - `device_tracker`
 - `remote_zero`
 
-No third coordinate-behavior mode is currently in scope. A new mode should only be added when a concrete Sign In App scenario requires a distinct runtime rule.
+No third coordinate-behaviour mode is currently in scope. A new mode should only be added when a concrete Sign In App scenario requires a distinct runtime rule.
 
-`distance` carries the location-specific accuracy parameter for `device_tracker` routing behavior.
+`distance` carries the location-specific accuracy parameter for `device_tracker` routing behaviour.
 
 ## Action surface
 
@@ -89,5 +89,5 @@ Migration therefore proceeds by:
 1. adding `configured_locations`
 2. teaching runtime logic and services to read both models
 3. moving config flow to write the new model
-4. making runtime coordinate resolution prefer configured-location behavior over compatibility hints
+4. making runtime coordinate resolution prefer configured-location behaviour over compatibility hints
 5. keeping compatibility hints until the concrete-site action surface is established
