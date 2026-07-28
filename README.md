@@ -1,3 +1,18 @@
+---
+type: "Repository Guide"
+title: "Home Assistant Sign In App Integration"
+description: "Documents Home Assistant Sign In App Integration for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - repository-guide
+navigation:
+  role: entry-point
+  order: 10
+---
 <p align="center">
   <img src="Sign%20In%20App%20Banner.png" alt="Sign In App banner" width="960" />
 </p>
@@ -50,3 +65,7 @@ Start with:
 - [docs/RELIABILITY.md](docs/RELIABILITY.md)
 
 For repository workflow and agent-focussed context, read [AGENTS.md](AGENTS.md).
+
+## Repository knowledge
+
+- [Documentation map](docs/knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

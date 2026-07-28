@@ -1,3 +1,18 @@
+---
+type: "Product Contract"
+title: "Attendance Automation"
+description: "Documents Attendance Automation for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - product-contract
+navigation:
+  role: foundational
+  order: 20
+---
 # Attendance Automation
 
 ## Product statement
@@ -100,3 +115,7 @@ The system should:
 - resolve drift through reconfiguration rather than silent mutation
 - present current configured label and routing semantics beside newly discovered backend hints
 - allow the user to keep the current configuration, accept the discovered hints, or edit the user-facing label
+
+## Repository knowledge
+
+- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

@@ -1,3 +1,18 @@
+---
+type: "Glossary Concept"
+title: "Glossary"
+description: "Documents Glossary for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - glossary-concept
+navigation:
+  role: foundational
+  order: 20
+---
 # Glossary
 
 ## Terms
@@ -190,3 +205,7 @@ A meaningful mismatch between persisted routing semantics and later backend-disc
 Contract drift should be surfaced through an admin-facing signal and resolved through reconfiguration.
 
 It should not silently rewrite durable configuration.
+
+## Repository knowledge
+
+- [Documentation map](docs/knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

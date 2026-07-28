@@ -1,3 +1,18 @@
+---
+type: "Product Contract"
+title: "Observed API Contract 2026-05-16"
+description: "Documents Observed API Contract 2026-05-16 for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - product-contract
+navigation:
+  role: foundational
+  order: 20
+---
 # Observed API Contract 2026-05-16
 
 ## Scope
@@ -61,3 +76,7 @@ It should also be treated as a verified authoritative backend identity field for
 ## Drift note
 
 The live browser app used `x-app-version: Web companion app/3.21.1+302188`, while repository code still hardcodes an older version string.
+
+## Repository knowledge
+
+- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

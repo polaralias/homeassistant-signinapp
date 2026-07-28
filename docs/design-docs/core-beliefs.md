@@ -1,3 +1,18 @@
+---
+type: "Design Concept"
+title: "Core Beliefs"
+description: "Documents Core Beliefs for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - design-concept
+navigation:
+  role: supporting
+  order: 100
+---
 # Core Beliefs
 
 ## Belief 1: The repo should describe the intended system, not just the inherited one
@@ -22,3 +37,7 @@ A public repo for hiring value should let a reviewer answer:
 - what is still risky
 
 without guessing.
+
+## Repository knowledge
+
+- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

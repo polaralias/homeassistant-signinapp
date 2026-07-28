@@ -1,3 +1,18 @@
+---
+type: "Security Boundary"
+title: "Security"
+description: "Documents Security for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - security-boundary
+navigation:
+  role: foundational
+  order: 20
+---
 # Security
 
 ## Security posture
@@ -54,3 +69,7 @@ Any verification artefact stored in the repo must redact:
 - fixture names should describe behavioural shape, not real people or sites
 - any fresh live capture must be sanitised before it is promoted into `tests/fixtures` or `docs/references`
 - CI must not require live credentials or real Sign In App access
+
+## Repository knowledge
+
+- [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

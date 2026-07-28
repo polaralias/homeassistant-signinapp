@@ -1,3 +1,18 @@
+---
+type: "Reliability Contract"
+title: "Reliability"
+description: "Documents Reliability for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - reliability-contract
+navigation:
+  role: supporting
+  order: 100
+---
 # Reliability
 
 ## Reliability objective
@@ -152,3 +167,7 @@ Drift should be surfaced through an admin-facing issue and resolved through reco
 - location-qualified status variants removed or deliberately constrained as presentation only
 - restart and stale-cache behaviour tested explicitly
 - contract drift detectable by failing tests or fixture review
+
+## Repository knowledge
+
+- [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

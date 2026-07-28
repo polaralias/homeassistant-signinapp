@@ -1,3 +1,18 @@
+---
+type: "Quality Standard"
+title: "Quality Score"
+description: "Documents Quality Score for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - quality-standard
+navigation:
+  role: supporting
+  order: 100
+---
 # Quality Score
 
 ## Current assessment
@@ -30,3 +45,7 @@ Maintain confidence by:
 
 1. periodically re-verifying the live backend contract and sanitising any new evidence
 2. tightening packaging and release ergonomics as the public integration surface matures
+
+## Repository knowledge
+
+- [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

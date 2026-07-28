@@ -1,3 +1,18 @@
+---
+type: "Decision"
+title: "Open-Ended Configured Location Model"
+description: "Documents Open-Ended Configured Location Model for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - decision
+navigation:
+  role: foundational
+  order: 20
+---
 # Open-Ended Configured Location Model
 
 Date: 2026-05-23
@@ -91,3 +106,7 @@ Migration therefore proceeds by:
 3. moving config flow to write the new model
 4. making runtime coordinate resolution prefer configured-location behaviour over compatibility hints
 5. keeping compatibility hints until the concrete-site action surface is established
+
+## Repository knowledge
+
+- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

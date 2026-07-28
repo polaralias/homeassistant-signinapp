@@ -1,3 +1,18 @@
+---
+type: "Security Boundary"
+title: "Auth Model"
+description: "Documents Auth Model for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - security-boundary
+navigation:
+  role: foundational
+  order: 20
+---
 # Auth Model
 
 ## Desired end state
@@ -32,3 +47,7 @@ When auth behaviour is observed, document:
 - the security implications
 
 Do not document secrets themselves.
+
+## Repository knowledge
+
+- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

@@ -1,3 +1,18 @@
+---
+type: "Architecture Concept"
+title: "Architecture"
+description: "Documents Architecture for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - architecture-concept
+navigation:
+  role: foundational
+  order: 20
+---
 # Architecture
 
 ## System summary
@@ -252,3 +267,7 @@ Desired end state:
 - domain rules verified independently
 - transport assumptions documented explicitly
 - runtime wiring covered by focussed integration tests
+
+## Repository knowledge
+
+- [Documentation map](docs/knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

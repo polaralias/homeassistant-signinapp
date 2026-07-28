@@ -1,3 +1,18 @@
+---
+type: "Validation Evidence"
+title: "Verification Harness Completion"
+description: "Documents Verification Harness Completion for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: evidence
+verification: verified-limited
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - validation-evidence
+navigation:
+  role: reference
+  order: 200
+---
 # Verification Harness Completion
 
 Date: 2026-05-23
@@ -41,3 +56,7 @@ Canonical behaviour and model docs:
 
 - Windows lifecycle verification still requires Home Assistant test-environment shims for `aiodns` selector-loop behaviour and `os.fchmod`.
 - Any future routing-semantic expansion must start from a concrete Sign In App scenario and a new explicit decision.
+
+## Repository knowledge
+
+- [Documentation map](../../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.
