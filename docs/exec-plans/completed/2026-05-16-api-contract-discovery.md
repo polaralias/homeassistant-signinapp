@@ -1,3 +1,18 @@
+---
+type: "Product Contract"
+title: "API Contract Discovery 2026-05-16"
+description: "Documents API Contract Discovery 2026-05-16 for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - product-contract
+navigation:
+  role: foundational
+  order: 20
+---
 # API Contract Discovery 2026-05-16
 
 ## Outcome
@@ -28,3 +43,7 @@ A live verification pass was completed against the Sign In App companion app and
 ## Follow-on action
 
 This discovery pass is complete only as evidence gathering. The next phase is harness construction and targeted correctness fixes.
+
+## Repository knowledge
+
+- [Documentation map](../../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

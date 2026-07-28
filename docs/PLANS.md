@@ -1,3 +1,18 @@
+---
+type: "Delivery Plan"
+title: "Plans"
+description: "Documents Plans for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - delivery-plan
+navigation:
+  role: supporting
+  order: 100
+---
 # Plans
 
 ## Active
@@ -16,3 +31,7 @@ No active execution plans.
 ## Reading note
 
 The verification harness is now a completed repository capability. Read the completed harness note for the checked-in evidence surface.
+
+## Repository knowledge
+
+- [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

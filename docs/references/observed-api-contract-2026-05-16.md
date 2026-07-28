@@ -1,10 +1,25 @@
+---
+type: "Product Contract"
+title: "Observed API Contract 2026-05-16"
+description: "Documents Observed API Contract 2026-05-16 for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - product-contract
+navigation:
+  role: foundational
+  order: 20
+---
 # Observed API Contract 2026-05-16
 
 ## Scope
 
-This file records observed backend behavior from a live authenticated session on 2026-05-16.
+This file records observed backend behaviour from a live authenticated session on 2026-05-16.
 
-All secrets and personal data are sanitized.
+All secrets and personal data are sanitised.
 
 ## Observed endpoints
 
@@ -19,7 +34,7 @@ All secrets and personal data are sanitized.
 
 ## Minimal confirmed auth model
 
-- `connect` accepts a normalized companion code
+- `connect` accepts a normalised companion code
 - authenticated requests use `Authorization: Bearer <token>`
 - `reconnect` returns a fresh token
 
@@ -61,3 +76,7 @@ It should also be treated as a verified authoritative backend identity field for
 ## Drift note
 
 The live browser app used `x-app-version: Web companion app/3.21.1+302188`, while repository code still hardcodes an older version string.
+
+## Repository knowledge
+
+- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

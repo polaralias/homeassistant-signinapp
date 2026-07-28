@@ -1,8 +1,23 @@
+---
+type: "Security Boundary"
+title: "Security"
+description: "Documents Security for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - security-boundary
+navigation:
+  role: foundational
+  order: 20
+---
 # Security
 
 ## Security posture
 
-This project integrates with a non-public backend contract and handles bearer tokens for attendance actions. That makes secrecy and minimization more important than in a normal public API integration.
+This project integrates with a non-public backend contract and handles bearer tokens for attendance actions. That makes secrecy and minimisation more important than in a normal public API integration.
 
 ## Security principles
 
@@ -13,7 +28,7 @@ Do not store:
 - companion codes
 - raw bearer tokens
 - raw personal field data
-- unsanitized captured responses
+- unsanitised captured responses
 
 ### Store only what the product needs
 
@@ -28,13 +43,13 @@ The product does not need:
 - complete historic backend payload archives in the repo
 - developer-only captured secrets
 
-### Sanitize before documenting
+### Sanitise before documenting
 
-Any verification artifact stored in the repo must redact:
+Any verification artefact stored in the repo must redact:
 
 - auth tokens
 - personal email addresses
-- opaque personal identifiers where not needed to explain behavior
+- opaque personal identifiers where not needed to explain behaviour
 
 ## Current concerns
 
@@ -45,12 +60,16 @@ Any verification artifact stored in the repo must redact:
 ## Desired end state
 
 - token handling documented
-- verification fixtures sanitized by default
+- verification fixtures sanitised by default
 - test harness uses redacted fixtures, not live secrets
 
 ## Local harness policy
 
-- checked-in tests must run only on sanitized fixtures
-- fixture names should describe behavioral shape, not real people or sites
-- any fresh live capture must be sanitized before it is promoted into `tests/fixtures` or `docs/references`
+- checked-in tests must run only on sanitised fixtures
+- fixture names should describe behavioural shape, not real people or sites
+- any fresh live capture must be sanitised before it is promoted into `tests/fixtures` or `docs/references`
 - CI must not require live credentials or real Sign In App access
+
+## Repository knowledge
+
+- [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

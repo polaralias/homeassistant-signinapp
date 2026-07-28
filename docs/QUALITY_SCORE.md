@@ -1,3 +1,18 @@
+---
+type: "Quality Standard"
+title: "Quality Score"
+description: "Documents Quality Score for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - quality-standard
+navigation:
+  role: supporting
+  order: 100
+---
 # Quality Score
 
 ## Current assessment
@@ -14,7 +29,7 @@ The backend contract is still reverse-engineered, but the critical current-state
 
 ### Runtime verification: 8/10
 
-Pure logic, service handlers, config flow, sensor projection, mutation refresh, and Home Assistant lifecycle behavior now have a sanitized regression harness and CI entrypoint.
+Pure logic, service handlers, config flow, sensor projection, mutation refresh, and Home Assistant lifecycle behaviour now have a sanitised regression harness and CI entrypoint.
 
 ### Repository hygiene: 8/10
 
@@ -28,5 +43,9 @@ The repository is public-ready and maintainable, with remaining risk concentrate
 
 Maintain confidence by:
 
-1. periodically re-verifying the live backend contract and sanitizing any new evidence
+1. periodically re-verifying the live backend contract and sanitising any new evidence
 2. tightening packaging and release ergonomics as the public integration surface matures
+
+## Repository knowledge
+
+- [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.

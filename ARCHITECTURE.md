@@ -1,3 +1,18 @@
+---
+type: "Architecture Concept"
+title: "Architecture"
+description: "Documents Architecture for the homeassistant-signinapp repository."
+timestamp: 2026-07-28T21:55:36Z
+authority: canonical
+verification: untested
+owner: polaralias
+tags:
+  - homeassistant-signinapp
+  - architecture-concept
+navigation:
+  role: foundational
+  order: 20
+---
 # Architecture
 
 ## System summary
@@ -48,7 +63,7 @@ Responsibilities:
 - durable routing metadata persisted per configured work location
 - backend-discovered routing hints confirmed during config flow before becoming durable configuration
 - explicit inclusion or exclusion of discovered work locations before they become available target states
-- configuration of current attendance routing behavior
+- configuration of current attendance routing behaviour
 - person entity selection
 
 Unselected discovered work locations should be rediscovered on demand rather than persisted as shadow durable configuration.
@@ -58,7 +73,7 @@ Persisted routing metadata should stay intentionally small and durable:
 - stable backend work-location identity
 - user-facing label
 - inclusion or enabled state
-- coordinate-behavior semantics
+- coordinate-behaviour semantics
 - any location-specific parameter required by those semantics
 
 Presentation grouping for automation UX should be derived from persisted routing metadata rather than stored as separate durable configuration unless explicitly needed later.
@@ -85,7 +100,7 @@ File:
 
 Responsibilities:
 
-- normalize inputs
+- normalise inputs
 - resolve work-location type
 - resolve current work location from backend payloads
 - execute attendance routing decisions for service actions and state resolution
@@ -114,15 +129,15 @@ Attendance routing is intentionally asymmetric:
 
 This asymmetry is one reason sign-in and sign-out remain distinct product verbs.
 
-Explicit action input should evolve toward concrete work-location identity.
+Explicit action input should evolve towards concrete work-location identity.
 
 Routing-mode hints such as today's office or remote model should be treated as a compatibility layer rather than the final product surface.
 
-The supported transition action surface should be prioritized in this order:
+The supported transition action surface should be prioritised in this order:
 
 1. explicit concrete work-location identity
 2. sign-out with no explicit target using inference rules
-3. routing-hint compatibility input such as office-like or remote-like behavior
+3. routing-hint compatibility input such as office-like or remote-like behaviour
 
 Concrete-target actions should fail if the chosen configured target is temporarily unusable.
 
@@ -202,7 +217,7 @@ The entity model should remain:
 - multiple available target states for actions
 - canonical status classes in the primary state machine
 
-Action-time behavior should narrow from configured targets, not create new ones outside configuration.
+Action-time behaviour should narrow from configured targets, not create new ones outside configuration.
 
 ## Architectural risks
 
@@ -215,7 +230,7 @@ Desired end state:
 - config flow presents backend-discovered routing hints for confirmation before persistence
 - config flow requires explicit inclusion before a discovered work location becomes an available target state
 - config persists durable routing metadata per configured work location
-- configuration is expressed as user routing behavior, not just two fixed mappings
+- configuration is expressed as user routing behaviour, not just two fixed mappings
 - drift between persisted configuration and newly discovered backend hints raises an admin-facing issue and is resolved through reconfiguration
 - canonical docs describe the end state, while references and plans capture current-state evidence
 ### Reverse-engineered backend contract
@@ -251,4 +266,8 @@ Desired end state:
 
 - domain rules verified independently
 - transport assumptions documented explicitly
-- runtime wiring covered by focused integration tests
+- runtime wiring covered by focussed integration tests
+
+## Repository knowledge
+
+- [Documentation map](docs/knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.
