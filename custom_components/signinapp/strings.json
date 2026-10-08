@@ -16,7 +16,7 @@
       },
       "sites": {
         "title": "Configure Sites",
-        "description": "{site_fetch_status}\n\nAvailable Sites:\n{sites_list}",
+        "description": "{site_fetch_status}\n\nAvailable sites:\n{sites_list}\n\nAfter selecting your person tracker, review each site and choose whether to include it.",
         "data": {
           "device_tracker": "Person tracker"
         }
@@ -24,11 +24,21 @@
       "reconfigure": {
         "title": "Reconfigure Sign In App",
         "description": "Update your site configuration. If you need to update your Companion Code, please remove and re-add the integration."
+      },
+      "site": {
+        "title": "Configure work location",
+        "description": "{site_name} ({progress})\n\n{site_status}\n\nEnable this location to make it available for attendance actions. Remote locations do not require a distance.",
+        "data": {
+          "enabled": "Enable this location",
+          "label": "Location name",
+          "distance": "Distance from location (metres)"
+        }
       }
     },
     "error": {
       "connect_error": "Failed to connect with the provided code. Please check and try again.",
-      "site_selection_invalid": "Choose valid sites before continuing."
+      "site_selection_invalid": "Choose valid sites before continuing.",
+      "no_sites_available": "No sites are available. Check your Sign In App access and try setup again."
     },
     "abort": {
       "already_configured": "Device is already configured",

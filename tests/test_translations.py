@@ -14,6 +14,9 @@ EXPECTED = {
     "config": {
         "step.user.data.companion_code": "Companion Code",
         "step.sites.data.device_tracker": "Person tracker",
+        "step.site.data.enabled": "Enable this location",
+        "step.site.data.label": "Location name",
+        "step.site.data.distance": "Distance from location (metres)",
     },
     "issues": {
         "config_drift_detected.title": "Sign In App configuration drift detected"
