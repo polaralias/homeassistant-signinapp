@@ -1,0 +1,86 @@
+{
+  "schemaVersion": 1,
+  "revision": 7,
+  "knowledge": [
+    {
+      "path": "docs/exec-plans/tech-debt-tracker.md",
+      "sources": [
+        "custom_components/signinapp/config_flow.py",
+        "custom_components/signinapp/strings.json",
+        "custom_components/signinapp/translations/en.json",
+        "tests/test_translations.py",
+        "tests/test_config_flow.py"
+      ],
+      "verified": {
+        "verifiedAt": "2026-10-08T20:51:31.801Z",
+        "evidence": "Reviewed stable-key repeated forms against durable routing, reconfiguration defaults, all-excluded correction, missing-site and remote semantics. All 16 relevant flow and translation tests pass; live frontend remains unverified. Manifest patch bump matches planned HACS release.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/config_flow.py",
+            "sha256": "d54837874078e1db45e3e20211712d74c679a8bba4c0a9a1808885347961d002"
+          },
+          {
+            "path": "custom_components/signinapp/strings.json",
+            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+          },
+          {
+            "path": "custom_components/signinapp/translations/en.json",
+            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+          },
+          {
+            "path": "docs/exec-plans/tech-debt-tracker.md",
+            "sha256": "a94c0a92b5ff22d3fd347e69ca2985df9c9d928e7498cc58a7d9e53667a9f640"
+          },
+          {
+            "path": "tests/test_config_flow.py",
+            "sha256": "a988008e8cb0622641956542aa1e25eb064b7b453d070afc41a736b296f2691b"
+          },
+          {
+            "path": "tests/test_translations.py",
+            "sha256": "b090386cb4cc9bf91c615fb8b9c410cebfc34dc0063bb1d21b9966ec7c69aa81"
+          }
+        ]
+      }
+    },
+    {
+      "path": "docs/product-specs/attendance-automation.md",
+      "sources": [
+        "custom_components/signinapp/config_flow.py",
+        "custom_components/signinapp/strings.json",
+        "custom_components/signinapp/translations/en.json",
+        "tests/test_config_flow.py",
+        "tests/test_translations.py"
+      ],
+      "verified": {
+        "verifiedAt": "2026-10-08T20:51:31.905Z",
+        "evidence": "Reviewed stable-key repeated forms against durable routing, reconfiguration defaults, all-excluded correction, missing-site and remote semantics. All 16 relevant flow and translation tests pass; live frontend remains unverified. Manifest patch bump matches planned HACS release.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/config_flow.py",
+            "sha256": "d54837874078e1db45e3e20211712d74c679a8bba4c0a9a1808885347961d002"
+          },
+          {
+            "path": "custom_components/signinapp/strings.json",
+            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+          },
+          {
+            "path": "custom_components/signinapp/translations/en.json",
+            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+          },
+          {
+            "path": "docs/product-specs/attendance-automation.md",
+            "sha256": "2839ded0e5a45c1802d5eab4196babb82e468f18e12d9ceb4bc95e2b21fecb4a"
+          },
+          {
+            "path": "tests/test_config_flow.py",
+            "sha256": "a988008e8cb0622641956542aa1e25eb064b7b453d070afc41a736b296f2691b"
+          },
+          {
+            "path": "tests/test_translations.py",
+            "sha256": "b090386cb4cc9bf91c615fb8b9c410cebfc34dc0063bb1d21b9966ec7c69aa81"
+          }
+        ]
+      }
+    }
+  ]
+}

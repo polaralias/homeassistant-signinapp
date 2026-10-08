@@ -59,6 +59,9 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self.config_unique_id = None
         self.visitor_name = None
         self.site_fetch_failed = False
+        self._site_records = []
+        self._site_index = 0
+        self._site_input = {}
 
     def _store_config_context(self, config_data: dict[str, Any]) -> None:
         """Persist config-derived context for later steps."""
@@ -252,106 +255,154 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
         return await self.async_step_sites()
 
-    async def async_step_sites(self, user_input=None):
-        """Handle the sites configuration step."""
-        _LOGGER.debug("Starting sites step in config flow")
-        errors = {}
-
-        # Pre-fill values if reconfiguring
-        defaults = {}
+    def _configuration_defaults(self) -> dict[str, Any]:
+        """Read persisted defaults without changing the config entry."""
         if self.context.get("source") == config_entries.SOURCE_RECONFIGURE:
             entry = self.hass.config_entries.async_get_entry(self.context["entry_id"])
             if entry:
-                defaults = entry.data
+                return entry.data
+        return {}
 
+    async def async_step_sites(self, user_input=None):
+        """Choose the person tracker before configuring each discovered site."""
+        defaults = self._configuration_defaults()
+        self._site_records = self._ordered_site_records(defaults)
+        errors = {}
         if user_input is not None:
-            configured_locations = self._build_configured_locations(user_input, defaults)
-
-            if not configured_locations:
-                errors["base"] = "site_selection_invalid"
+            if not self._site_records:
+                errors["base"] = "no_sites_available"
             else:
-                _LOGGER.debug("Creating entry with data: %s", user_input)
-                entry_id = self.context.get("entry_id")
-                entry = self.hass.config_entries.async_get_entry(entry_id) if entry_id else None
-                existing_data = entry.data if entry else {}
-                data = {
-                    CONF_ACCESS_TOKEN: self.token or existing_data.get(CONF_ACCESS_TOKEN),
-                    CONF_CONFIGURED_LOCATIONS: configured_locations,
-                    CONF_DEVICE_TRACKER: user_input[CONF_DEVICE_TRACKER],
+                self._site_index = 0
+                self._site_input = {
+                    CONF_DEVICE_TRACKER: user_input[CONF_DEVICE_TRACKER]
                 }
-
-                if self.context.get("source") == config_entries.SOURCE_RECONFIGURE:
-                    if entry:
-                        self.hass.config_entries.async_update_entry(entry, data=data)
-                        await self.hass.config_entries.async_reload(entry.entry_id)
-                        return self.async_abort(reason="reconfigure_successful")
-
-                title = self.visitor_name or "Sign In App"
-                return self.async_create_entry(title=title, data=data)
-
-        schema_fields: dict[vol.Marker, object] = {}
-        site_records = self._ordered_site_records(defaults)
-        for site in site_records:
-            site_id = int(site["id"])
-            missing_site = bool(site.get("_missing"))
-            schema_fields[
-                vol.Required(
-                    self._site_enabled_key(site_id),
-                    default=self._suggested_site_enabled(site),
-                )
-            ] = BooleanSelector(BooleanSelectorConfig())
-            schema_fields[
-                vol.Required(
-                    self._site_label_key(site_id),
-                    description={"suggested_value": self._suggested_site_label(site)},
-                )
-            ] = TextSelector(TextSelectorConfig())
-            if infer_coordinate_behavior(str(site.get("type", "")).lower()) != COORDINATE_BEHAVIOR_REMOTE_ZERO:
-                schema_fields[
-                    vol.Optional(
-                        self._site_distance_key(site_id),
-                        description={"suggested_value": self._suggested_site_distance(site)},
-                    )
-                ] = NumberSelector(
-                    NumberSelectorConfig(min=0, mode=NumberSelectorMode.BOX, unit_of_measurement="m")
-                )
-            if missing_site:
-                _LOGGER.debug("Configured site %s missing from backend discovery; preserving manual fields", site_id)
+                return await self.async_step_site()
 
         tracker_field_kwargs = {}
         if defaults.get(CONF_DEVICE_TRACKER) is not None:
             tracker_field_kwargs["description"] = {
-                "suggested_value": defaults.get(CONF_DEVICE_TRACKER)
+                "suggested_value": defaults[CONF_DEVICE_TRACKER]
             }
-        schema_fields[vol.Required(CONF_DEVICE_TRACKER, **tracker_field_kwargs)] = EntitySelector(
-            EntitySelectorConfig(domain="person")
+        schema = vol.Schema(
+            {
+                vol.Required(
+                    CONF_DEVICE_TRACKER, **tracker_field_kwargs
+                ): EntitySelector(EntitySelectorConfig(domain="person"))
+            }
         )
-        schema = vol.Schema(schema_fields)
-
-        if site_records:
-            sites_text = "\n".join(
-                [
-                    (
-                        f"{site['id']}: {site['name']} ({site.get('type', 'standard')})"
-                        if not site.get("_missing")
-                        else f"{site['id']}: {site['name']} ({site.get('type', 'unknown')}, configured but not rediscovered)"
-                    )
-                    for site in site_records
-                ]
+        sites_text = (
+            "\n".join(
+                f"{site['name']} ({site.get('type', 'standard')})"
+                for site in self._site_records
             )
-        else:
-            sites_text = "No site list is currently available from backend discovery."
-
+            or "No site list is currently available from backend discovery."
+        )
         return self.async_show_form(
             step_id="sites",
-            data_schema=schema,
+            data_schema=self.add_suggested_values_to_schema(schema, user_input or {}),
             errors=errors,
             description_placeholders={
                 "sites_list": sites_text,
                 "site_fetch_status": (
                     "The site list could not be refreshed. Previously configured locations are shown when available."
                     if self.site_fetch_failed
-                    else "Choose from the detected sites. Defaults are preselected when the API makes them obvious."
+                    else "Choose your person tracker, then review each detected site."
                 ),
             },
+        )
+
+    async def async_step_site(self, user_input=None):
+        """Use stable translatable field keys for every site."""
+        if not self._site_records:
+            return await self.async_step_sites()
+        errors = {}
+        site = self._site_records[self._site_index]
+        site_id = int(site["id"])
+        if user_input is not None:
+            self._site_input[self._site_enabled_key(site_id)] = user_input[CONF_ENABLED]
+            self._site_input[self._site_label_key(site_id)] = user_input[CONF_LABEL]
+            self._site_input[self._site_distance_key(site_id)] = user_input.get(
+                CONF_DISTANCE, self._suggested_site_distance(site)
+            )
+            self._site_index += 1
+            if self._site_index < len(self._site_records):
+                return await self.async_step_site()
+            configured_locations = self._build_configured_locations(
+                self._site_input, self._configuration_defaults()
+            )
+            if configured_locations:
+                return await self._async_finish_sites(configured_locations)
+            # Preserve all answers while allowing the user to enable a site.
+            self._site_index = 0
+            site = self._site_records[0]
+            site_id = int(site["id"])
+            errors["base"] = "site_selection_invalid"
+
+        schema_fields = {
+            vol.Required(
+                CONF_ENABLED,
+                default=self._site_input.get(
+                    self._site_enabled_key(site_id), self._suggested_site_enabled(site)
+                ),
+            ): BooleanSelector(BooleanSelectorConfig()),
+            vol.Required(
+                CONF_LABEL,
+                description={
+                    "suggested_value": self._site_input.get(
+                        self._site_label_key(site_id), self._suggested_site_label(site)
+                    )
+                },
+            ): TextSelector(TextSelectorConfig()),
+        }
+        if (
+            infer_coordinate_behavior(str(site.get("type", "")).lower())
+            != COORDINATE_BEHAVIOR_REMOTE_ZERO
+        ):
+            schema_fields[
+                vol.Optional(
+                    CONF_DISTANCE,
+                    description={
+                        "suggested_value": self._site_input.get(
+                            self._site_distance_key(site_id),
+                            self._suggested_site_distance(site),
+                        )
+                    },
+                )
+            ] = NumberSelector(
+                NumberSelectorConfig(
+                    min=0, mode=NumberSelectorMode.BOX, unit_of_measurement="m"
+                )
+            )
+        return self.async_show_form(
+            step_id="site",
+            data_schema=vol.Schema(schema_fields),
+            errors=errors,
+            last_step=self._site_index == len(self._site_records) - 1,
+            description_placeholders={
+                "site_name": self._suggested_site_label(site),
+                "progress": f"{self._site_index + 1} / {len(self._site_records)}",
+                "site_status": (
+                    "This previously configured site was not rediscovered. Its saved settings are available for review."
+                    if site.get("_missing")
+                    else "Review whether to include this site and adjust its settings."
+                ),
+            },
+        )
+
+    async def _async_finish_sites(self, configured_locations):
+        """Persist confirmed routing only after every site has been reviewed."""
+        entry_id = self.context.get("entry_id")
+        entry = self.hass.config_entries.async_get_entry(entry_id) if entry_id else None
+        existing_data = entry.data if entry else {}
+        data = {
+            CONF_ACCESS_TOKEN: self.token or existing_data.get(CONF_ACCESS_TOKEN),
+            CONF_CONFIGURED_LOCATIONS: configured_locations,
+            CONF_DEVICE_TRACKER: self._site_input[CONF_DEVICE_TRACKER],
+        }
+        if self.context.get("source") == config_entries.SOURCE_RECONFIGURE and entry:
+            self.hass.config_entries.async_update_entry(entry, data=data)
+            await self.hass.config_entries.async_reload(entry.entry_id)
+            return self.async_abort(reason="reconfigure_successful")
+        return self.async_create_entry(
+            title=self.visitor_name or "Sign In App", data=data
         )

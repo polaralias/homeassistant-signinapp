@@ -105,6 +105,15 @@ The initial operational `status_reason` set is:
 - backend current-site field changes and integration silently guesses
 - setup succeeds but later automation behaviour is unreliable
 
+## Configuration form localisation
+
+- Setup first selects a Home Assistant person tracker, then reviews each discovered or previously configured site individually.
+- Every site form uses stable `enabled`, `label`, and optional `distance` keys with readable English labels; `en-GB` uses the packaged English fallback.
+- Backend site IDs must remain the stored routing identity and must not be exposed as raw form field names.
+- Remote sites omit distance input and retain zero-distance routing. Office sites retain their configured distance or backend/default radius.
+- If every site is excluded, preserve the answers and return to the first site with a readable error; do not save an empty configuration.
+- Reconfiguration must retain missing configured sites for explicit review and commit only after all sites have been reviewed.
+
 ## Reconfiguration behaviour
 
 When backend-discovered routing hints change later, the integration should preserve user-confirmed durable routing semantics by default.
@@ -118,4 +127,4 @@ The system should:
 
 ## Repository knowledge
 
-- [Documentation map](../knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.
+- [Documentation map](../knowledge/documentation-map.md) â€” RKE-managed reading order and relationship hub.
