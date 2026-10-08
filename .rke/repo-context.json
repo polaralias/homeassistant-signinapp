@@ -1,0 +1,41 @@
+{
+  "schemaVersion": 1,
+  "revision": 4,
+  "knowledge": [
+    {
+      "path": "docs/exec-plans/tech-debt-tracker.md",
+      "sources": [
+        "custom_components/signinapp/config_flow.py",
+        "custom_components/signinapp/strings.json",
+        "custom_components/signinapp/translations/en.json",
+        "tests/test_translations.py"
+      ],
+      "verified": {
+        "verifiedAt": "2026-10-08T20:14:35.094Z",
+        "evidence": "Reviewed packaged translation keys and flow emission; actual HA en/en-GB cache tests pass. Live UI and dynamic-form limits are documented.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/config_flow.py",
+            "sha256": "4a33ce47f1635d9babb82d9b9ca5ee110d4428e25ee0885a34fc3b4523e4b7fb"
+          },
+          {
+            "path": "custom_components/signinapp/strings.json",
+            "sha256": "c65f9db57e23a15484963e2b5fab65ac51e01439709c182fec438d981662834c"
+          },
+          {
+            "path": "custom_components/signinapp/translations/en.json",
+            "sha256": "c65f9db57e23a15484963e2b5fab65ac51e01439709c182fec438d981662834c"
+          },
+          {
+            "path": "docs/exec-plans/tech-debt-tracker.md",
+            "sha256": "773383fa9ded3f3bf8023412981c311a836c2b01c5c8c3eff3d857c798df1927"
+          },
+          {
+            "path": "tests/test_translations.py",
+            "sha256": "d6b4ae0689bf2a2a69d5b3aeba7fb91564db9725930a37ce47b80fa9abec3f79"
+          }
+        ]
+      }
+    }
+  ]
+}

@@ -15,7 +15,13 @@ navigation:
 ---
 # Tech Debt Tracker
 
-No active tracked technical debt in this file.
+## Dynamic site form labels
+
+Audit on 2026-10-08: `translations/en.json` supplies the fixed companion-code and person-tracker labels, repair strings, and sensor state strings. Automated Home Assistant translation-cache tests verify the fixed labels for `en` and `en-GB`.
+
+The site form generates fields such as `site_100_enabled`, `site_100_label`, and `site_100_distance`. Those backend-dependent keys have no static translations and the frontend falls back to their raw names. Adding an `en-GB.json` file cannot solve this.
+
+A follow-up should present sites through repeated steps with stable translatable field keys and a site-name description placeholder. Preserve configured-location IDs, inclusion, label overrides, distance semantics, reconfiguration defaults, missing-site handling, and error recovery. This flow redesign is pending; the audit does not claim the dynamic labels are fixed.
 
 Historical debt items from the harness tranche have been closed through checked-in tests, CI, docs, and config-model migration support.
 
