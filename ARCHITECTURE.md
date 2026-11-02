@@ -55,7 +55,7 @@ File:
 Responsibilities:
 
 - companion code entry
-- token acquisition
+- token acquisition and same-visitor Home Assistant reauthentication after credential rejection
 - dynamic work-location discovery from backend data
 - backend-discovered work-location names offered as initial config values
 - user-overridable work-location labels
