@@ -40,9 +40,17 @@ class FakeApi:
 
     def __init__(self, *, status_data: dict | None = None):
         self.status_data = status_data
-        self.sign_in = AsyncMock(return_value={"success": True})
-        self.sign_out = AsyncMock(return_value={"success": True})
-        self.get_config = AsyncMock(return_value=status_data)
+        self.sign_in = AsyncMock(side_effect=self._sign_in)
+        self.sign_out = AsyncMock(side_effect=self._sign_out)
+        self.get_config = AsyncMock(side_effect=lambda: self.status_data)
+
+    async def _sign_in(self, site_id, lat, lng, accuracy):
+        self.status_data = {"returningVisitor": {"status": "signed_in"}, "currentVisit": {"siteId": site_id}}
+        return {"success": True}
+
+    async def _sign_out(self, site_id, lat, lng, accuracy):
+        self.status_data = {"returningVisitor": {"status": "signed_out"}}
+        return {"success": True}
 
 
 class FakeCoordinator:
@@ -250,7 +258,7 @@ class ServiceHandlerTests(unittest.IsolatedAsyncioTestCase):
         ):
             await integration.get_handle_sign_out(hass)(call)
 
-        api.get_config.assert_awaited_once()
+        self.assertEqual(api.get_config.await_count, 2)  # Resolve before mutation, confirm afterwards.
         api.sign_out.assert_awaited_once_with(100, 51.5007, -0.1246, 75.0)
         self.assertIsNone(entry_data["current_session"])
         self.assertEqual(entry_data["last_session"]["site_id"], 100)
@@ -342,7 +350,7 @@ class ServiceHandlerTests(unittest.IsolatedAsyncioTestCase):
             patch.object(integration, "async_save_session_state", AsyncMock()) as save_state,
             patch.object(integration, "async_refresh_entry_state", AsyncMock()) as refresh_state,
         ):
-            with self.assertRaises(RuntimeError):
+            with self.assertRaises(HomeAssistantError):
                 await integration.get_handle_sign_in(hass)(call)
 
         self.assertEqual(entry_data[integration.RUNTIME_STATUS_REASON_KEY], "target_temporarily_unusable")

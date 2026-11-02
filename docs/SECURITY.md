@@ -73,3 +73,7 @@ Any verification artefact stored in the repo must redact:
 ## Repository knowledge
 
 - [Documentation map](knowledge/documentation-map.md) — RKE-managed reading order and relationship hub.
+
+## Credential recovery and logging
+
+The 1.1.0 transport logs only request method, endpoint and status. Companion codes, access tokens and personal response payloads are excluded even at debug level. Reauthentication checks visitor identity before replacing a token and preserves the existing site configuration. Synthetic log-capture tests defend this boundary.

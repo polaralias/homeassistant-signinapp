@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 7,
+  "revision": 9,
   "knowledge": [
     {
       "path": "docs/exec-plans/tech-debt-tracker.md",
@@ -12,24 +12,24 @@
         "tests/test_config_flow.py"
       ],
       "verified": {
-        "verifiedAt": "2026-10-08T20:51:31.801Z",
-        "evidence": "Reviewed stable-key repeated forms against durable routing, reconfiguration defaults, all-excluded correction, missing-site and remote semantics. All 16 relevant flow and translation tests pass; live frontend remains unverified. Manifest patch bump matches planned HACS release.",
+        "verifiedAt": "2026-11-02T05:42:52.488Z",
+        "evidence": "Reviewed bound per-site wizard and locale coverage against retained behavior and credential recovery changes. Existing wizard debt remains resolved; new offline regressions cover auth and attendance boundaries.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
-            "sha256": "d54837874078e1db45e3e20211712d74c679a8bba4c0a9a1808885347961d002"
+            "sha256": "1705bf3564b763b7cae38fe38a3e55773d9ac6a467fdf18d2af90241d3340141"
           },
           {
             "path": "custom_components/signinapp/strings.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
           },
           {
             "path": "custom_components/signinapp/translations/en.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
           },
           {
             "path": "docs/exec-plans/tech-debt-tracker.md",
-            "sha256": "a94c0a92b5ff22d3fd347e69ca2985df9c9d928e7498cc58a7d9e53667a9f640"
+            "sha256": "0746538c246c1b61710ecdfbdf5561a4db3a63cb2d64c9ca95097259f60383d5"
           },
           {
             "path": "tests/test_config_flow.py",
@@ -52,24 +52,24 @@
         "tests/test_translations.py"
       ],
       "verified": {
-        "verifiedAt": "2026-10-08T20:51:31.905Z",
-        "evidence": "Reviewed stable-key repeated forms against durable routing, reconfiguration defaults, all-excluded correction, missing-site and remote semantics. All 16 relevant flow and translation tests pass; live frontend remains unverified. Manifest patch bump matches planned HACS release.",
+        "verifiedAt": "2026-11-02T05:42:50.013Z",
+        "evidence": "Reviewed bound wizard source, translations, flow tests and new same-visitor reauth; routing is preserved, explicit targets fail closed, status confirmation precedes cache commit. 90 tests pass.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
-            "sha256": "d54837874078e1db45e3e20211712d74c679a8bba4c0a9a1808885347961d002"
+            "sha256": "1705bf3564b763b7cae38fe38a3e55773d9ac6a467fdf18d2af90241d3340141"
           },
           {
             "path": "custom_components/signinapp/strings.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
           },
           {
             "path": "custom_components/signinapp/translations/en.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
           },
           {
             "path": "docs/product-specs/attendance-automation.md",
-            "sha256": "2839ded0e5a45c1802d5eab4196babb82e468f18e12d9ceb4bc95e2b21fecb4a"
+            "sha256": "81895cda9da2d052b37ae07b300906ebdaad4e5d0a1c63b35933d39834441a99"
           },
           {
             "path": "tests/test_config_flow.py",

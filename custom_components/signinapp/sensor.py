@@ -4,6 +4,7 @@ import logging
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -14,6 +15,7 @@ from homeassistant.helpers.update_coordinator import (
 )
 
 from . import async_sync_config_drift_issue
+from .api import SignInAppAuthError
 from .const import DOMAIN, RUNTIME_STATUS_REASON_KEY
 from .logic import resolve_sensor_attributes, resolve_sensor_state
 
@@ -38,9 +40,10 @@ async def async_setup_entry(
             async_sync_config_drift_issue(hass, entry, data)
             _LOGGER.debug("Sensor data fetched successfully")
             return data
+        except SignInAppAuthError as err:
+            raise ConfigEntryAuthFailed("Reconnect your Sign In App account") from err
         except Exception as err:
-            _LOGGER.error("Error communicating with API: %s", err)
-            raise UpdateFailed(f"Error communicating with API: {err}")
+            raise UpdateFailed("Unable to retrieve Sign In App status") from err
 
     coordinator = DataUpdateCoordinator(
         hass,

@@ -1,5 +1,7 @@
 """The Sign In App integration."""
+import asyncio
 import inspect
+import math
 from copy import deepcopy
 import logging
 from typing import Any
@@ -35,7 +37,7 @@ from .const import (
     RUNTIME_STATUS_REASON_KEY,
     DRIFT_ISSUE_ID_PREFIX,
 )
-from .api import SignInAppApi
+from .api import SignInAppApi, SignInAppAuthError
 from .logic import (
     SITE_TYPE_OFFICE,
     SITE_TYPE_REMOTE,
@@ -46,6 +48,7 @@ from .logic import (
     infer_coordinate_behavior,
     iter_configured_locations,
     normalize_config_data,
+    resolve_current_site_id,
     resolve_sign_out_context,
 )
 
@@ -203,6 +206,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data.setdefault(DOMAIN, {})
     hass.data[DOMAIN][entry.entry_id] = {
         "api": api,
+        "entry": entry,
         "config": normalized_entry_data,
         "coordinator": None,
         "current_session": persisted_session.get("current_session"),
@@ -244,7 +248,7 @@ async def get_location(
         )
 
         state = hass.states.get(tracker_entity)
-        if not state:
+        if not state or getattr(state, "state", None) in ("unknown", "unavailable"):
             raise HomeAssistantError(
                 f"Configured person entity {tracker_entity} was not found."
             )
@@ -256,9 +260,7 @@ async def get_location(
                 f"Configured person entity {tracker_entity} has no current coordinates."
             )
 
-        lat = float(latitude)
-        lng = float(longitude)
-        accuracy = float(distance)
+        lat, lng, accuracy = _validated_location(latitude, longitude, distance)
     elif coordinate_behavior == COORDINATE_BEHAVIOR_REMOTE_ZERO:
         lat = 0.0
         lng = 0.0
@@ -266,6 +268,44 @@ async def get_location(
     else:
         raise HomeAssistantError("Configured site has an unsupported coordinate behavior.")
     return lat, lng, accuracy
+
+
+def _validated_location(latitude, longitude, accuracy):
+    """Reject invalid fresh or cached location measurements before API calls."""
+    try:
+        if any(isinstance(v, bool) for v in (latitude, longitude, accuracy)):
+            raise ValueError
+        lat, lng, distance = float(latitude), float(longitude), float(accuracy)
+        if not all(math.isfinite(v) for v in (lat, lng, distance)):
+            raise ValueError
+        if not -90 <= lat <= 90 or not -180 <= lng <= 180 or distance < 0:
+            raise ValueError
+    except (TypeError, ValueError) as err:
+        raise HomeAssistantError("The configured location has invalid coordinates or accuracy.") from err
+    return lat, lng, distance
+
+
+def _authentication_failed(hass, entry_data):
+    """Start credential recovery for the same entry, never a replacement."""
+    entry = entry_data.get("entry")
+    if entry is not None:
+        entry.async_start_reauth(hass)
+    return HomeAssistantError("Reconnect your Sign In App account before trying again.")
+
+
+async def _confirm_attendance(api, expected_status, site_id):
+    """Wait briefly for authoritative state before committing a local session."""
+    for delay in (0, 0.25, 0.75):
+        if delay:
+            await asyncio.sleep(delay)
+        data = await api.get_config()
+        visitor = (data or {}).get("returningVisitor") or {}
+        status = visitor.get("status")
+        if status == expected_status and (
+            expected_status == "signed_out" or resolve_current_site_id(data) == site_id
+        ):
+            return
+    raise HomeAssistantError("The attendance request was sent but its result could not be confirmed.")
 
 
 async def async_refresh_entry_state(entry_data):
@@ -397,23 +437,23 @@ def get_handle_sign_in(hass: HomeAssistant):
             {"lat": lat, "lng": lng, "accuracy": accuracy},
         )
 
-        _LOGGER.debug(
-            "Signing in to site_id=%s with lat=%s, lng=%s, accuracy=%s",
-            site_id, lat, lng, accuracy
-        )
+        _LOGGER.debug("Sending sign-in request")
         try:
             await api.sign_in(site_id, lat, lng, accuracy)
+            await _confirm_attendance(api, "signed_in", site_id)
             set_runtime_status_reason(entry_data, None)
             entry_data["current_session"] = deepcopy(session_context)
             entry_data["last_session"] = deepcopy(session_context)
             await async_save_session_state(hass, entry_id, entry_data)
             await async_refresh_entry_state(entry_data)
             _LOGGER.debug("Sign in successful")
+        except SignInAppAuthError as err:
+            raise _authentication_failed(hass, entry_data) from err
         except Exception as e:
             set_runtime_status_reason(entry_data, "target_temporarily_unusable")
             await async_refresh_entry_state(entry_data)
-            _LOGGER.error("Sign in failed: %s", e)
-            raise
+            _LOGGER.error("Sign in could not be confirmed (%s)", type(e).__name__)
+            raise HomeAssistantError("Sign in could not be confirmed; check attendance before retrying.") from e
     return handle_sign_in
 
 def get_handle_sign_out(hass: HomeAssistant):
@@ -438,8 +478,10 @@ def get_handle_sign_out(hass: HomeAssistant):
             try:
                 _LOGGER.debug("Fetching status data for sign out resolution")
                 status_data = await api.get_config()
+            except SignInAppAuthError as err:
+                raise _authentication_failed(hass, entry_data) from err
             except Exception as err:
-                _LOGGER.warning("Could not fetch status before sign out: %s", err)
+                _LOGGER.warning("Could not fetch status before sign out (%s)", type(err).__name__)
 
         sign_out_context = resolve_sign_out_context(
             config_data,
@@ -465,11 +507,11 @@ def get_handle_sign_out(hass: HomeAssistant):
         site_id = sign_out_context["site_id"]
         site_type = sign_out_context.get("site_type")
         configured_location = get_configured_location(config_data, site_id=site_id)
+        if configured_location is None:
+            raise HomeAssistantError("The sign-out target is no longer configured or enabled.")
         if sign_out_context.get("use_cached_location"):
             location = entry_data["current_session"]["location"]
-            lat = float(location["lat"])
-            lng = float(location["lng"])
-            accuracy = float(location["accuracy"])
+            lat, lng, accuracy = _validated_location(location["lat"], location["lng"], location["accuracy"])
         else:
             if configured_location is None and site_type not in (SITE_TYPE_OFFICE, SITE_TYPE_REMOTE):
                 raise HomeAssistantError(
@@ -487,12 +529,10 @@ def get_handle_sign_out(hass: HomeAssistant):
                 await async_refresh_entry_state(entry_data)
                 raise
 
-        _LOGGER.debug(
-            "Signing out from site_id=%s with lat=%s, lng=%s, accuracy=%s",
-            site_id, lat, lng, accuracy
-        )
+        _LOGGER.debug("Sending sign-out request")
         try:
             await api.sign_out(site_id, lat, lng, accuracy)
+            await _confirm_attendance(api, "signed_out", site_id)
             set_runtime_status_reason(entry_data, None)
             if entry_data.get("current_session") is not None:
                 entry_data["last_session"] = deepcopy(entry_data["current_session"])
@@ -500,9 +540,11 @@ def get_handle_sign_out(hass: HomeAssistant):
             await async_save_session_state(hass, entry_id, entry_data)
             await async_refresh_entry_state(entry_data)
             _LOGGER.debug("Sign out successful")
+        except SignInAppAuthError as err:
+            raise _authentication_failed(hass, entry_data) from err
         except Exception as e:
             set_runtime_status_reason(entry_data, "target_temporarily_unusable")
             await async_refresh_entry_state(entry_data)
-            _LOGGER.error("Sign out failed: %s", e)
-            raise
+            _LOGGER.error("Sign out could not be confirmed (%s)", type(e).__name__)
+            raise HomeAssistantError("Sign out could not be confirmed; check attendance before retrying.") from e
     return handle_sign_out

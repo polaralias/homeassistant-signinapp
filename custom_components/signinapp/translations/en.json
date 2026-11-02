@@ -23,7 +23,7 @@
       },
       "reconfigure": {
         "title": "Reconfigure Sign In App",
-        "description": "Update your site configuration. If you need to update your Companion Code, please remove and re-add the integration."
+        "description": "Review your configured work locations. Expired credentials can be reconnected without removing the integration."
       },
       "site": {
         "title": "Configure work location",
@@ -33,16 +33,26 @@
           "label": "Location name",
           "distance": "Distance from location (metres)"
         }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect Sign In App",
+        "description": "Enter a new companion code for the same account. Your configured locations and entity identity will be kept.",
+        "data": {
+          "companion_code": "Companion Code"
+        }
       }
     },
     "error": {
       "connect_error": "Failed to connect with the provided code. Please check and try again.",
       "site_selection_invalid": "Choose valid sites before continuing.",
-      "no_sites_available": "No sites are available. Check your Sign In App access and try setup again."
+      "no_sites_available": "No sites are available. Check your Sign In App access and try setup again.",
+      "wrong_account": "This code belongs to a different account, or its account identity could not be verified."
     },
     "abort": {
       "already_configured": "Device is already configured",
-      "reconfigure_successful": "Reconfiguration successful"
+      "reconfigure_successful": "Reconfiguration successful",
+      "reauth_successful": "Account reconnected successfully.",
+      "reauth_entry_missing": "The integration entry no longer exists."
     }
   },
   "entity": {
