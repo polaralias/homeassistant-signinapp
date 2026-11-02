@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import ipaddress
 import json
 from pathlib import Path
@@ -119,7 +120,9 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def make_entry(self, *, state: ConfigEntryState = ConfigEntryState.NOT_LOADED) -> ConfigEntry:
+        extra = {"subentries_data": []} if "subentries_data" in inspect.signature(ConfigEntry).parameters else {}
         return ConfigEntry(
+            **extra,
             version=1,
             minor_version=1,
             domain=integration.DOMAIN,
