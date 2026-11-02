@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 9,
+  "revision": 11,
   "knowledge": [
     {
       "path": "docs/exec-plans/tech-debt-tracker.md",
@@ -12,8 +12,8 @@
         "tests/test_config_flow.py"
       ],
       "verified": {
-        "verifiedAt": "2026-11-02T05:42:52.488Z",
-        "evidence": "Reviewed bound per-site wizard and locale coverage against retained behavior and credential recovery changes. Existing wizard debt remains resolved; new offline regressions cover auth and attendance boundaries.",
+        "verifiedAt": "2026-11-02T05:59:59.261Z",
+        "evidence": "Reviewed causal candidate docs and rebuilt task navigation. Auth architecture, security, reliability and attendance contract match same-account recovery, enabled targets, safe logging and confirmation before caching. Historical backend evidence remains dated; product and glossary semantics remain valid. All 90 tests pass on both HA versions and live setup loads without changing attendance.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
@@ -52,8 +52,8 @@
         "tests/test_translations.py"
       ],
       "verified": {
-        "verifiedAt": "2026-11-02T05:42:50.013Z",
-        "evidence": "Reviewed bound wizard source, translations, flow tests and new same-visitor reauth; routing is preserved, explicit targets fail closed, status confirmation precedes cache commit. 90 tests pass.",
+        "verifiedAt": "2026-11-02T05:59:58.379Z",
+        "evidence": "Reviewed causal candidate docs and rebuilt task navigation. Auth architecture, security, reliability and attendance contract match same-account recovery, enabled targets, safe logging and confirmation before caching. Historical backend evidence remains dated; product and glossary semantics remain valid. All 90 tests pass on both HA versions and live setup loads without changing attendance.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
