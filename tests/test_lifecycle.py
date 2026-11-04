@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import inspect
 import ipaddress
 import json
 from pathlib import Path
@@ -57,6 +58,9 @@ class FakeApi:
             },
             "currentVisit": {"siteId": 100},
         }
+
+    async def get_history(self, date_from, date_to):
+        return []
 
 
 class MutableApi(FakeApi):
@@ -119,7 +123,9 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
         shutil.rmtree(self.temp_dir, ignore_errors=True)
 
     def make_entry(self, *, state: ConfigEntryState = ConfigEntryState.NOT_LOADED) -> ConfigEntry:
+        extra = {"subentries_data": []} if "subentries_data" in inspect.signature(ConfigEntry).parameters else {}
         return ConfigEntry(
+            **extra,
             version=1,
             minor_version=1,
             domain=integration.DOMAIN,
@@ -332,7 +338,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
 
         await sensor_module.async_setup_entry(self.hass, entry, add_entities)
 
-        self.assertEqual(len(added_entities), 1)
+        self.assertGreater(len(added_entities), 1)
         self.assertIsNotNone(self.hass.data[integration.DOMAIN][entry.entry_id]["coordinator"])
         self.assertEqual(added_entities[0].native_value, "signed_in")
         self.assertEqual(added_entities[0].extra_state_attributes["status_class"], "signed_in")

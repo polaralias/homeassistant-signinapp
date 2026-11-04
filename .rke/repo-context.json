@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 7,
+  "revision": 22,
   "knowledge": [
     {
       "path": "docs/exec-plans/tech-debt-tracker.md",
@@ -12,24 +12,24 @@
         "tests/test_config_flow.py"
       ],
       "verified": {
-        "verifiedAt": "2026-10-08T20:51:31.801Z",
-        "evidence": "Reviewed stable-key repeated forms against durable routing, reconfiguration defaults, all-excluded correction, missing-site and remote semantics. All 16 relevant flow and translation tests pass; live frontend remains unverified. Manifest patch bump matches planned HACS release.",
+        "verifiedAt": "2026-11-04T19:20:32.036Z",
+        "evidence": "Reviewed reporting addition against new options/history behavior; dated existing site-localization evidence remains historical and current routing unchanged. Recorded remaining open-session API observation limitation.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
-            "sha256": "d54837874078e1db45e3e20211712d74c679a8bba4c0a9a1808885347961d002"
+            "sha256": "38df3e8975a29c0fab3fe6cbc48b048a5495d8eee3b60d16f47b959cfc81ff07"
           },
           {
             "path": "custom_components/signinapp/strings.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "custom_components/signinapp/translations/en.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "docs/exec-plans/tech-debt-tracker.md",
-            "sha256": "a94c0a92b5ff22d3fd347e69ca2985df9c9d928e7498cc58a7d9e53667a9f640"
+            "sha256": "168441f8e96be626487b0614580a97f991e6ad0cd98f563f1dfd354b3cbe8015"
           },
           {
             "path": "tests/test_config_flow.py",
@@ -52,24 +52,24 @@
         "tests/test_translations.py"
       ],
       "verified": {
-        "verifiedAt": "2026-10-08T20:51:31.905Z",
-        "evidence": "Reviewed stable-key repeated forms against durable routing, reconfiguration defaults, all-excluded correction, missing-site and remote semantics. All 16 relevant flow and translation tests pass; live frontend remains unverified. Manifest patch bump matches planned HACS release.",
+        "verifiedAt": "2026-11-04T19:20:35.233Z",
+        "evidence": "Existing attendance routing and confirmation unchanged; clarified history-only 403 cannot trigger credential replacement. 127 HA2025 tests and 37 current-HA reporting tests pass; existing live primary identity and automation configurations preserved.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
-            "sha256": "d54837874078e1db45e3e20211712d74c679a8bba4c0a9a1808885347961d002"
+            "sha256": "38df3e8975a29c0fab3fe6cbc48b048a5495d8eee3b60d16f47b959cfc81ff07"
           },
           {
             "path": "custom_components/signinapp/strings.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "custom_components/signinapp/translations/en.json",
-            "sha256": "4202c6880b774fc585bf69c5dacd5489417203472af650af5f1b398cc110b4f1"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "docs/product-specs/attendance-automation.md",
-            "sha256": "2839ded0e5a45c1802d5eab4196babb82e468f18e12d9ceb4bc95e2b21fecb4a"
+            "sha256": "6e2eb1dfc4efe2994ccbc9ef4d5eedc0b1158068f85c8248ec709e88108d03c4"
           },
           {
             "path": "tests/test_config_flow.py",
@@ -78,6 +78,113 @@
           {
             "path": "tests/test_translations.py",
             "sha256": "b090386cb4cc9bf91c615fb8b9c410cebfc34dc0063bb1d21b9966ec7c69aa81"
+          }
+        ]
+      }
+    },
+    {
+      "path": "docs/product-specs/attendance-reporting.md",
+      "sources": [
+        "custom_components/signinapp/reporting.py",
+        "custom_components/signinapp/quotas.py",
+        "custom_components/signinapp/reporting_coordinator.py",
+        "custom_components/signinapp/reporting_sensor.py",
+        "custom_components/signinapp/api.py",
+        "custom_components/signinapp/sensor.py",
+        "custom_components/signinapp/config_flow.py",
+        "tests/test_reporting.py",
+        "tests/test_reporting_runtime.py"
+      ],
+      "verified": {
+        "verifiedAt": "2026-11-04T22:10:57.795Z",
+        "evidence": "Reviewed final merge preparation against reporting and reliability code. The combined feature contains the 1.1.0 safeguards already, so removed the obsolete separate-branch prerequisite. Reporting calculations and examples unchanged; current GitHub tests passed both HA versions at64f837d. CI update restores the existing required check name with an aggregate that fails unless the whole matrix succeeds.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/api.py",
+            "sha256": "03a9d62a333800c718d11cc6dbc7c3657fb66d87bb11cb1ccea2cd84e8113387"
+          },
+          {
+            "path": "custom_components/signinapp/config_flow.py",
+            "sha256": "38df3e8975a29c0fab3fe6cbc48b048a5495d8eee3b60d16f47b959cfc81ff07"
+          },
+          {
+            "path": "custom_components/signinapp/quotas.py",
+            "sha256": "ae2e6fd372392f841ef52d04f07b03d2b59e7174a61ed816489eb80afb915b98"
+          },
+          {
+            "path": "custom_components/signinapp/reporting_coordinator.py",
+            "sha256": "908afc2340070d8b98188e2ac2f1f91cf4810cc0a8f68d3ee24fb0abc0659f8d"
+          },
+          {
+            "path": "custom_components/signinapp/reporting_sensor.py",
+            "sha256": "b1f7f1b560e2c74fd335321430117c134fbdbd9c1741222e1a925b2668ee61e0"
+          },
+          {
+            "path": "custom_components/signinapp/reporting.py",
+            "sha256": "0d7489385bc74c1bce6ff4fc2254308cfb797a05beb9a424fa127b13ef9cbae4"
+          },
+          {
+            "path": "custom_components/signinapp/sensor.py",
+            "sha256": "a9914c5226b1e9c24fb6b6b711ec2f73984aeac65964528dde199a363fcfdb54"
+          },
+          {
+            "path": "docs/product-specs/attendance-reporting.md",
+            "sha256": "690e0a8bf3b27de136dd4c6b7203e960fe5529b1cd15cb4d4f78c27ef39a9c95"
+          },
+          {
+            "path": "tests/test_reporting_runtime.py",
+            "sha256": "0992b3263ef12a8a2c00f7b3328075eb38ab83e353608fdb7f8ce3680eddbdb9"
+          },
+          {
+            "path": "tests/test_reporting.py",
+            "sha256": "dbaded2717a51888d9d6eb566aec4f507c2cd06d1414f929b743cc3e8c633268"
+          }
+        ]
+      }
+    },
+    {
+      "path": "examples/README.md",
+      "sources": [
+        "examples/packages/*.yaml",
+        "examples/dashboard/*.yaml",
+        "tests/test_examples.py",
+        "custom_components/signinapp/services.yaml"
+      ],
+      "verified": {
+        "verifiedAt": "2026-11-04T20:10:24.783Z",
+        "evidence": "Reviewed candidate docs against the final examples. Routing and canonical states unchanged; live history evidence remains dated with open-session limitation. README, map and census link the new guide. Confidence, quotas, native reporting IDs, notification lifecycle and synthetic verification match the documented contracts. No real attendance export or personal configuration is published.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/services.yaml",
+            "sha256": "74ab5dbf887367778f8da30e8af65b6966cc4cf891871aff538b2f7186fd0bd9"
+          },
+          {
+            "path": "examples/dashboard/attendance.yaml",
+            "sha256": "bcbca3d7e1f778072d0ea82beddc652a0f76961e7552979d32f8e0ce34962e2c"
+          },
+          {
+            "path": "examples/dashboard/entity-aliases.yaml",
+            "sha256": "e4c0894164ec353c7b1dc9a513a058f2145b1efd6f9c3a8444d005114e06fdcd"
+          },
+          {
+            "path": "examples/packages/attendance.yaml",
+            "sha256": "ab72a8ccf325dfeda9bd078baa15a34aa2a7a03bbac1b2dee94c6ba7891a1ea6"
+          },
+          {
+            "path": "examples/packages/presence-custom-zone.yaml",
+            "sha256": "4eaa98c2c13cfc0ad441ba0fa33475bf55d4364ebfe8e4b2191dbb809d9a65a3"
+          },
+          {
+            "path": "examples/packages/presence-zone.yaml",
+            "sha256": "01d2bb8491be4c922d9552d9a6c7e21ce78da28247c04d3976317f9318be23c5"
+          },
+          {
+            "path": "examples/README.md",
+            "sha256": "6e5cb6a46ac611916b9d60719fa38f92e3a5a954fac12742966c6cd011026808"
+          },
+          {
+            "path": "tests/test_examples.py",
+            "sha256": "4c7d6b15fbe199b6a7c83b00225450a3a640a366472c44eb86729716cb7de93d"
           }
         ]
       }

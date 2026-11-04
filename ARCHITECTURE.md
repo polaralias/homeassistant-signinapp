@@ -25,7 +25,7 @@ The integration does five things:
 2. Fetches account and work-location configuration from the Sign In App mobile backend.
 3. Lets the user configure work locations and attendance routing through Home Assistant config flow.
 4. Exposes Home Assistant services to sign in and sign out across those configured locations.
-5. Exposes a single Home Assistant entity representing the user's current attendance state.
+5. Exposes one primary attendance state entity and separate history-derived reporting entities.
 
 These actions should remain distinct verbs, not collapse into a generic attendance-target setter.
 
@@ -45,6 +45,7 @@ Responsibilities:
 - persisted session context storage
 - platform registration
 - single primary user attendance entity
+- independently refreshed attendance history and quota entities
 
 ### Config flow
 
@@ -55,7 +56,7 @@ File:
 Responsibilities:
 
 - companion code entry
-- token acquisition
+- token acquisition and same-visitor Home Assistant reauthentication after credential rejection
 - dynamic work-location discovery from backend data
 - backend-discovered work-location names offered as initial config values
 - user-overridable work-location labels
@@ -65,6 +66,7 @@ Responsibilities:
 - explicit inclusion or exclusion of discovered work locations before they become available target states
 - configuration of current attendance routing behaviour
 - person entity selection
+- reporting options for quota amount, anchored period, working basis and opt-in calendar rules
 
 Unselected discovered work locations should be rediscovered on demand rather than persisted as shadow durable configuration.
 
@@ -91,6 +93,30 @@ Responsibilities:
 - request construction
 - auth header handling
 - connect, config fetch, sign-in, sign-out requests
+- bounded, read-only history requests with separate history permission failures
+
+### Attendance reporting
+
+`reporting_coordinator.py` shares a history cache across all reporting entities.
+It fetches at most 45 days per request, refreshes history every five minutes or on
+attendance changes, and projects current durations every minute. History failures
+make reporting unavailable without preventing the primary attendance sensor loading.
+Authentication failures still use the existing credential recovery path.
+
+`reporting.py` unions session intervals, splits them at local calendar boundaries,
+classifies activity changes, and calculates exact elapsed hours. Ambiguous activity
+or working classification is explicit rather than assumed. `quotas.py` implements
+anchored periods and optional workday/holiday allocations in the executor. The
+maintained `holidays` dependency supplies local public holiday calendars.
+
+`reporting_sensor.py` exposes stable visitor/period/metric/activity IDs on the same
+HA device. Newly discovered activity IDs add entities; renamed labels preserve
+identity. Options changes reload the entry. No raw history is persisted by the
+integration; exposed numerical sensors may be recorded by HA Recorder.
+
+See [attendance reporting](docs/product-specs/attendance-reporting.md) for the contract
+and [dated API observations](docs/references/observed-history-contract-2026-11-04.md)
+for the observed transport boundary.
 
 ### Domain logic
 

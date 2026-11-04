@@ -21,7 +21,7 @@ This is an exhaustive census of every in-scope tracked or pending Markdown file 
 
 ## Census result
 
-- In-scope Markdown files: 29
+- In-scope Markdown files: 33
 - Excluded skill-package files: 0
 - Unclassified files: 0
 - Exact duplicate governed knowledge bodies: 0
@@ -30,9 +30,9 @@ This is an exhaustive census of every in-scope tracked or pending Markdown file 
 |---|---:|
 | Generated visualization | 1 |
 | OKF execution concept | 1 |
-| OKF knowledge concept | 21 |
+| OKF knowledge concept | 24 |
 | Repository instruction | 2 |
-| Reserved OKF navigation/history | 4 |
+| Reserved OKF navigation/history | 5 |
 
 ## Completeness
 
@@ -64,14 +64,18 @@ This is an exhaustive census of every in-scope tracked or pending Markdown file 
 | [`docs/visualizations/repository-okf.mermaid.md`](../visualizations/repository-okf.mermaid.md) | Generated visualization | Specialised schema | Derived Mermaid report; source records remain authoritative |
 | [`docs/PLANS.md`](../PLANS.md) | OKF knowledge concept | OKF | Delivery Plan |
 | [`docs/product-specs/attendance-automation.md`](../product-specs/attendance-automation.md) | OKF knowledge concept | OKF | Product Contract |
+| [`docs/product-specs/attendance-reporting.md`](../product-specs/attendance-reporting.md) | OKF knowledge concept | OKF | Product Contract |
 | [`docs/product-specs/index.md`](../product-specs/index.md) | Reserved OKF navigation/history | OKF exception | Reserved index.md/log.md schema |
 | [`docs/PRODUCT_SENSE.md`](../PRODUCT_SENSE.md) | OKF knowledge concept | OKF | Repository Knowledge |
 | [`docs/QUALITY_SCORE.md`](../QUALITY_SCORE.md) | OKF knowledge concept | OKF | Quality Standard |
 | [`docs/references/codebase-survey-2026-05-16.md`](../references/codebase-survey-2026-05-16.md) | OKF knowledge concept | OKF | Reference |
 | [`docs/references/observed-api-contract-2026-05-16.md`](../references/observed-api-contract-2026-05-16.md) | OKF knowledge concept | OKF | Product Contract |
+| [`docs/references/observed-history-contract-2026-11-04.md`](../references/observed-history-contract-2026-11-04.md) | OKF knowledge concept | OKF | Product Contract |
 | [`docs/RELIABILITY.md`](../RELIABILITY.md) | OKF knowledge concept | OKF | Reliability Contract |
 | [`docs/SECURITY.md`](../SECURITY.md) | OKF knowledge concept | OKF | Security Boundary |
 | [`GLOSSARY.md`](../../GLOSSARY.md) | OKF knowledge concept | OKF | Glossary Concept |
+| [`examples/README.md`](../../examples/README.md) | OKF knowledge concept | OKF | Configuration Guide |
+| [`examples/index.md`](../../examples/index.md) | Reserved OKF navigation/history | OKF exception | Generated example navigation |
 | [`README.md`](../../README.md) | OKF knowledge concept | OKF | Repository Guide |
 | [`tasks/adopt-rke-okf-knowledge/task.md`](../../tasks/adopt-rke-okf-knowledge/task.md) | OKF execution concept | OKF | Task |
 | [`tasks/index.md`](../../tasks/index.md) | Reserved OKF navigation/history | OKF exception | Reserved index.md/log.md schema |

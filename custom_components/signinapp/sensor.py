@@ -4,6 +4,7 @@ import logging
 
 from homeassistant.components.sensor import SensorEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.exceptions import ConfigEntryAuthFailed
 from homeassistant.core import HomeAssistant
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.entity_platform import AddEntitiesCallback
@@ -14,8 +15,12 @@ from homeassistant.helpers.update_coordinator import (
 )
 
 from . import async_sync_config_drift_issue
+from .api import SignInAppAuthError
 from .const import DOMAIN, RUNTIME_STATUS_REASON_KEY
 from .logic import resolve_sensor_attributes, resolve_sensor_state
+from .reporting_coordinator import ReportingCoordinator
+from .quotas import ReportingOptions
+from .reporting_sensor import async_setup_reporting_sensors
 
 _LOGGER = logging.getLogger(__name__)
 
@@ -38,9 +43,10 @@ async def async_setup_entry(
             async_sync_config_drift_issue(hass, entry, data)
             _LOGGER.debug("Sensor data fetched successfully")
             return data
+        except SignInAppAuthError as err:
+            raise ConfigEntryAuthFailed("Reconnect your Sign In App account") from err
         except Exception as err:
-            _LOGGER.error("Error communicating with API: %s", err)
-            raise UpdateFailed(f"Error communicating with API: {err}")
+            raise UpdateFailed("Unable to retrieve Sign In App status") from err
 
     coordinator = DataUpdateCoordinator(
         hass,
@@ -55,6 +61,19 @@ async def async_setup_entry(
     hass.data[DOMAIN][entry.entry_id]["coordinator"] = coordinator
 
     async_add_entities([SignInAppSensor(hass, coordinator, entry)], True)
+
+    # Holiday country discovery may import calendar data; keep it off HA's loop.
+    options = await hass.async_add_executor_job(ReportingOptions.from_mapping, dict(entry.options))
+    reporting = ReportingCoordinator(hass, entry, api, coordinator, options)
+    hass.data[DOMAIN][entry.entry_id]["reporting_coordinator"] = reporting
+    # History errors must not prevent the primary attendance sensor from loading.
+    await reporting.async_refresh()
+    await async_setup_reporting_sensors(hass, entry, reporting, async_add_entities)
+
+    def refresh_reporting():
+        hass.async_create_task(reporting.async_request_refresh())
+
+    entry.async_on_unload(coordinator.async_add_listener(refresh_reporting))
 
 class SignInAppSensor(CoordinatorEntity, SensorEntity):
     """Representation of a Sign In App Sensor."""

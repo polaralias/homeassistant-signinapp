@@ -1,0 +1,177 @@
+automation:
+  - id: attendance_arrival
+    alias: Attendance arrival
+    description: Weekdays, trusted per-person polygon membership, stability delay, persistent visit latch and
+      restart/reload reconciliation. No automatic command retry.
+    triggers:
+      - trigger: template
+        value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus', 'trackers_in_zone') or []) }}"
+        for:
+          minutes: 1
+        id: normal
+      - trigger: homeassistant
+        event: start
+        id: reconcile
+      - trigger: event
+        event_type: automation_reloaded
+        id: reconcile
+      - trigger: state
+        entity_id: automation.attendance_arrival
+        to: "on"
+        id: reconcile
+    conditions:
+      - condition: time
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+      - condition: state
+        entity_id: input_boolean.attendance_visit_active
+        state: "off"
+      - condition: template
+        value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus','trackers_in_zone') or []) }}"
+    actions:
+      - if:
+          - condition: template
+            value_template: "{{ trigger.id | default('normal') == 'reconcile' }}"
+        then:
+          - wait_for_trigger:
+              - trigger: template
+                value_template: "{{ 'person.attendee' not in (state_attr('sensor.customzone_campus','trackers_in_zone') or
+                  []) }}"
+            timeout:
+              minutes: 1
+            continue_on_timeout: true
+          - condition: template
+            value_template: '{{ wait.trigger is none }}'
+      - condition: template
+        value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus','trackers_in_zone') or []) }}"
+      - condition: state
+        entity_id: input_boolean.attendance_visit_active
+        state: "off"
+      - condition: time
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+      - data: {}
+        target:
+          entity_id: input_boolean.attendance_critical_alerts
+        action: input_boolean.turn_off
+      - action: input_boolean.turn_on
+        target:
+          entity_id: input_boolean.attendance_visit_active
+      - action: notify.mobile_app_contact_phone
+        enabled: true
+        data:
+          message: The attendee has arrived at the primary site
+          data:
+            notification_icon: mdi:briefcase
+            tag: attendance_arrival
+            group: Sign In Updates
+            channel: Sign In Updates
+            clickAction: /lovelace/attendance
+            timeout: 21600
+          title: Location update 💼
+        continue_on_error: true
+      - action: homeassistant.update_entity
+        target:
+          entity_id: sensor.attendee_status
+      - if:
+          - condition: state
+            entity_id: sensor.attendee_status
+            state: signed_out
+          - condition: template
+            value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus', 'trackers_in_zone') or []) }}"
+        then:
+          - action: signinapp.sign_in
+            data:
+              device_id: REPLACE_WITH_DEVICE_ID
+              site_id: 1001
+    mode: single
+  - id: attendance_departure
+    alias: Attendance departure
+    description: Weekdays, trusted per-person polygon membership, stability delay, persistent visit latch and
+      restart/reload reconciliation. No automatic command retry.
+    triggers:
+      - trigger: template
+        value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus', 'trackers_out_of_zone') or []) }}"
+        for:
+          minutes: 2
+        id: normal
+      - trigger: homeassistant
+        event: start
+        id: reconcile
+      - trigger: event
+        event_type: automation_reloaded
+        id: reconcile
+      - trigger: state
+        entity_id: automation.attendance_departure
+        to: "on"
+        id: reconcile
+    conditions:
+      - condition: time
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+      - condition: state
+        entity_id: input_boolean.attendance_visit_active
+        state: "on"
+      - condition: template
+        value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus','trackers_out_of_zone') or []) }}"
+    actions:
+      - if:
+          - condition: template
+            value_template: "{{ trigger.id | default('normal') == 'reconcile' }}"
+        then:
+          - wait_for_trigger:
+              - trigger: template
+                value_template: "{{ 'person.attendee' not in (state_attr('sensor.customzone_campus','trackers_out_of_zone')
+                  or []) }}"
+            timeout:
+              minutes: 2
+            continue_on_timeout: true
+          - condition: template
+            value_template: '{{ wait.trigger is none }}'
+      - condition: template
+        value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus','trackers_out_of_zone') or []) }}"
+      - condition: state
+        entity_id: input_boolean.attendance_visit_active
+        state: "on"
+      - condition: time
+        weekday:
+          - mon
+          - tue
+          - wed
+          - thu
+          - fri
+      - action: input_boolean.turn_on
+        data: {}
+        target:
+          entity_id: input_boolean.attendance_critical_alerts
+      - action: input_boolean.turn_off
+        target:
+          entity_id: input_boolean.attendance_visit_active
+      - action: homeassistant.update_entity
+        target:
+          entity_id: sensor.attendee_status
+      - if:
+          - condition: template
+            value_template: "{{ is_state('sensor.attendee_status','signed_in') and state_attr('sensor.attendee_status','active_work_location_id')
+              == 1001 }}"
+          - condition: template
+            value_template: "{{ 'person.attendee' in (state_attr('sensor.customzone_campus', 'trackers_out_of_zone') or [])
+              }}"
+        then:
+          - action: signinapp.sign_out
+            data:
+              device_id: REPLACE_WITH_DEVICE_ID
+              site_id: 1001
+    mode: single

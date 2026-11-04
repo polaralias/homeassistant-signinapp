@@ -49,7 +49,9 @@ This map records the repository's typed durable knowledge surfaces and their bou
 
 - [API Contract Discovery 2026-05-16](../exec-plans/completed/2026-05-16-api-contract-discovery.md)
 - [Attendance Automation](../product-specs/attendance-automation.md)
+- [Attendance Reporting and Quotas](../product-specs/attendance-reporting.md)
 - [Observed API Contract 2026-05-16](../references/observed-api-contract-2026-05-16.md)
+- [Observed History Contract 2026-11-04](../references/observed-history-contract-2026-11-04.md)
 
 ## Quality Standard
 
@@ -66,6 +68,10 @@ This map records the repository's typed durable knowledge surfaces and their bou
 ## Repository Guide
 
 - [Home Assistant Sign In App Integration](../../README.md)
+
+## Configuration Guide
+
+- [Attendance automation and dashboard examples](../../examples/README.md)
 
 ## Repository Knowledge
 

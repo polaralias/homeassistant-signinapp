@@ -5,6 +5,8 @@ from typing import Any
 import voluptuous as vol
 from homeassistant import config_entries
 from homeassistant.const import CONF_ACCESS_TOKEN
+from homeassistant.data_entry_flow import AbortFlow
+from homeassistant.core import callback
 from homeassistant.helpers import aiohttp_client
 from homeassistant.helpers.selector import (
     BooleanSelector,
@@ -16,6 +18,12 @@ from homeassistant.helpers.selector import (
     NumberSelectorMode,
     TextSelector,
     TextSelectorConfig,
+    SelectSelector,
+    SelectSelectorConfig,
+    SelectSelectorMode,
+    DateSelector,
+    CountrySelector,
+    CountrySelectorConfig,
 )
 
 from .const import (
@@ -36,7 +44,7 @@ from .const import (
     COORDINATE_BEHAVIOR_REMOTE_ZERO,
     DEFAULT_OFFICE_DISTANCE,
 )
-from .api import SignInAppApi
+from .api import SignInAppApi, SignInAppAuthError
 from .logic import (
     SITE_TYPE_OFFICE,
     SITE_TYPE_REMOTE,
@@ -52,6 +60,11 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
 
     VERSION = 1
 
+    @staticmethod
+    @callback
+    def async_get_options_flow(config_entry):
+        return SignInAppReportingOptionsFlow(config_entry)
+
     def __init__(self):
         """Initialize the config flow."""
         self.token = None
@@ -59,6 +72,7 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         self.config_unique_id = None
         self.visitor_name = None
         self.site_fetch_failed = False
+        self._reauth_target = None
         self._site_records = []
         self._site_index = 0
         self._site_input = {}
@@ -220,8 +234,10 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 _LOGGER.debug("Fetched %d sites", len(self.sites))
 
                 return await self.async_step_sites()
-            except Exception as e:
-                _LOGGER.exception("Error connecting: %s", e)
+            except AbortFlow:
+                raise
+            except Exception:
+                _LOGGER.warning("Sign In App connection failed")
                 errors["base"] = "connect_error"
 
         return self.async_show_form(
@@ -229,6 +245,43 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
             data_schema=vol.Schema({
                 vol.Required(CONF_COMPANION_CODE): str
             }),
+            errors=errors,
+        )
+
+    async def async_step_reauth(self, entry_data):
+        """Reconnect an existing entry without losing its routing configuration."""
+        self._reauth_target = self.hass.config_entries.async_get_entry(self.context["entry_id"])
+        return await self.async_step_reauth_confirm()
+
+    async def async_step_reauth_confirm(self, user_input=None):
+        """Validate a new companion code against the same account identity."""
+        errors = {}
+        entry = self._reauth_target
+        if entry is None:
+            return self.async_abort(reason="reauth_entry_missing")
+        if user_input is not None:
+            api = SignInAppApi(
+                aiohttp_client.async_get_clientsession(self.hass), timezone=self.hass.config.time_zone
+            )
+            try:
+                token = await api.connect(user_input[CONF_COMPANION_CODE])
+                api.set_token(token)
+                config = await api.get_config()
+                visitor_id = (config.get("returningVisitor") or {}).get("id")
+            except Exception:
+                errors["base"] = "connect_error"
+            else:
+                if visitor_id is None or (entry.unique_id and str(visitor_id) != entry.unique_id):
+                    errors["base"] = "wrong_account"
+                else:
+                    self.hass.config_entries.async_update_entry(
+                        entry, data={**entry.data, CONF_ACCESS_TOKEN: token}
+                    )
+                    await self.hass.config_entries.async_reload(entry.entry_id)
+                    return self.async_abort(reason="reauth_successful")
+        return self.async_show_form(
+            step_id="reauth_confirm",
+            data_schema=vol.Schema({vol.Required(CONF_COMPANION_CODE): str}),
             errors=errors,
         )
 
@@ -249,8 +302,11 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
                 if self.config_unique_id and entry.unique_id != self.config_unique_id:
                     _LOGGER.debug("Updating entry unique ID to: %s", self.config_unique_id)
                     self.hass.config_entries.async_update_entry(entry, unique_id=self.config_unique_id)
-            except Exception as e:
-                _LOGGER.warning("Could not fetch sites during reconfigure: %s", e)
+            except SignInAppAuthError:
+                self._reauth_target = entry
+                return await self.async_step_reauth_confirm()
+            except Exception:
+                _LOGGER.warning("Could not fetch sites during reconfigure")
                 self.site_fetch_failed = True
 
         return await self.async_step_sites()
@@ -406,3 +462,80 @@ class SignInAppConfigFlow(config_entries.ConfigFlow, domain=DOMAIN):
         return self.async_create_entry(
             title=self.visitor_name or "Sign In App", data=data
         )
+
+
+class SignInAppReportingOptionsFlow(config_entries.OptionsFlow):
+    """Configure contract periods and optional quota/calendar conversion."""
+
+    def __init__(self, entry):
+        self._entry = entry
+        self._input = dict(entry.options)
+
+    async def async_step_init(self, user_input=None):
+        from .quotas import DAYS, ReportingOptions
+        errors = {}
+        if user_input is not None:
+            candidate = {**self._input, **user_input}
+            # Keep disabled calendar settings for later re-enabling, without silently
+            # accepting invalid base periods or losing a user's previous region.
+            try:
+                await self.hass.async_add_executor_job(ReportingOptions.from_mapping, candidate)
+            except (TypeError, ValueError):
+                errors["base"] = "invalid_reporting_options"
+            else:
+                self._input = candidate
+                if candidate.get("holiday_adjustment"):
+                    return await self.async_step_holidays()
+                return self.async_create_entry(title="", data=candidate)
+        defaults = {"quota_hours":37.5,"quota_unit":"weeks","quota_length":1,
+                    "quota_anchor":"2000-01-03","workdays":list(DAYS[:5]),
+                    "quota_rollups":False,"holiday_adjustment":False,"quota_basis":"working",**self._input}
+        schema = vol.Schema({
+            vol.Required("quota_hours",default=defaults["quota_hours"]):NumberSelector(NumberSelectorConfig(min=0,max=10000,step=0.25,mode=NumberSelectorMode.BOX,unit_of_measurement="h")),
+            vol.Required("quota_unit",default=defaults["quota_unit"]):SelectSelector(SelectSelectorConfig(options=["days","weeks","months"],translation_key="quota_unit",mode=SelectSelectorMode.DROPDOWN)),
+            vol.Required("quota_length",default=defaults["quota_length"]):NumberSelector(NumberSelectorConfig(min=1,max=366,step=1,mode=NumberSelectorMode.BOX)),
+            vol.Required("quota_anchor",default=defaults["quota_anchor"]):DateSelector(),
+            vol.Required("workdays",default=defaults["workdays"]):SelectSelector(SelectSelectorConfig(options=list(DAYS),multiple=True,translation_key="workdays")),
+            vol.Required("quota_basis",default=defaults["quota_basis"]):SelectSelector(SelectSelectorConfig(options=["working","signed_in"],translation_key="quota_basis")),
+            vol.Required("quota_rollups",default=defaults["quota_rollups"]):BooleanSelector(),
+            vol.Required("holiday_adjustment",default=defaults["holiday_adjustment"]):BooleanSelector(),
+        })
+        return self.async_show_form(step_id="init",data_schema=schema,errors=errors)
+
+    async def async_step_holidays(self,user_input=None):
+        import holidays
+        supported = await self.hass.async_add_executor_job(lambda: holidays.list_supported_countries(include_aliases=False))
+        if user_input is not None:
+            country=user_input.get("holiday_country", "")
+            if country in supported or not country:
+                if country != self._input.get("holiday_country"):
+                    self._input["holiday_subdivision"] = ""
+                self._input["holiday_country"] = country
+                return await self.async_step_calendar()
+        # HA's native selector supplies localised country names. Leaving the field
+        # empty selects custom dates only and requires no extra locale dependency.
+        default={"default":self._input["holiday_country"]} if self._input.get("holiday_country") else {}
+        return self.async_show_form(step_id="holidays",data_schema=vol.Schema({
+            vol.Optional("holiday_country",**default):CountrySelector(CountrySelectorConfig(countries=list(supported)))}))
+
+    async def async_step_calendar(self,user_input=None):
+        from .quotas import ReportingOptions
+        import holidays
+        supported=await self.hass.async_add_executor_job(lambda: holidays.list_supported_countries(include_aliases=False))
+        subdivisions=supported.get(self._input.get("holiday_country"),[])
+        errors={}
+        if user_input is not None:
+            candidate={**self._input,**user_input}
+            try:
+                await self.hass.async_add_executor_job(ReportingOptions.from_mapping,candidate)
+            except (ValueError,TypeError):
+                errors["base"]="invalid_reporting_options"
+            else:
+                return self.async_create_entry(title="",data=candidate)
+        fields={vol.Optional("custom_holidays",default=self._input.get("custom_holidays", "")):TextSelector(TextSelectorConfig(multiline=True))}
+        if subdivisions:
+            calendar=await self.hass.async_add_executor_job(lambda: holidays.country_holidays(self._input['holiday_country']))
+            aliases=calendar.subdivisions_aliases
+            labels={s:next((name for name,code in aliases.items() if code==s and len(name)>len(s)),s) for s in subdivisions}
+            fields[vol.Optional("holiday_subdivision",default=self._input.get("holiday_subdivision", ""))]=SelectSelector(SelectSelectorConfig(options=[{"value":"","label":"National holidays"}]+[{"value":s,"label":labels[s]} for s in subdivisions],mode=SelectSelectorMode.DROPDOWN))
+        return self.async_show_form(step_id="calendar",data_schema=vol.Schema(fields),errors=errors)

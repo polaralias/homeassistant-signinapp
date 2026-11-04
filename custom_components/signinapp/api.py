@@ -1,13 +1,16 @@
-"""API Client for Sign In App."""
+"""Sign In App transport with explicit authentication and response boundaries."""
+from __future__ import annotations
+
 import logging
+from datetime import date
+from typing import Any
+
 import aiohttp
-from typing import Optional, Dict, Any
 
 from .const import API_BASE_URL
 from .logic import normalize_companion_code
 
 _LOGGER = logging.getLogger(__name__)
-
 HEADERS = {
     "accept": "application/json",
     "accept-language": "en-GB-oxendict,en;q=0.9",
@@ -18,120 +21,104 @@ HEADERS = {
     "x-app-version": "Web companion app/3.18.2+302148",
 }
 
+
+class SignInAppError(Exception):
+    """A safe-to-display protocol or attendance failure."""
+
+
+class SignInAppAuthError(SignInAppError):
+    """The backend rejected credentials; the config entry needs reauthentication."""
+
+
+class SignInAppHistoryPermissionError(SignInAppError):
+    """History access is not permitted; current attendance may still work."""
+
+
 class SignInAppApi:
-    """SignInApp API Client."""
+    """Transport client; never log credentials or personal response bodies."""
 
     def __init__(self, session: aiohttp.ClientSession, timezone: str = "Europe/London"):
-        """Initialize the API client."""
         self._session = session
         self._timezone = timezone
-        self._token: Optional[str] = None
+        self._token: str | None = None
 
     def set_token(self, token: str):
-        """Set the authentication token."""
         self._token = token
 
-    def _get_headers(self) -> Dict[str, str]:
-        """Get headers for requests."""
-        headers = HEADERS.copy()
-        headers["x-timezone"] = self._timezone
+    def _get_headers(self) -> dict[str, str]:
+        headers = dict(HEADERS, **{"x-timezone": self._timezone})
         if self._token:
             headers["authorization"] = f"Bearer {self._token}"
         return headers
 
-    async def connect(self, code: str) -> str:
-        """Exchange companion code for a token."""
-        url = f"{API_BASE_URL}/connect"
+    async def _request(self, method: str, endpoint: str, payload=None, *, authenticated=True,
+                       params=None, expected_type=dict, history=False):
         headers = self._get_headers()
-        # Ensure no token is sent for connect? PS script uses CommonHeaders not AuthHeaders.
-        # So I should remove authorization if it exists, although it shouldn't be set yet.
-        if "authorization" in headers:
-            del headers["authorization"]
-
-        normalized_code = normalize_companion_code(code)
-        if not normalized_code:
-            raise ValueError("Companion code is empty after normalization.")
-
-        payload = {"code": normalized_code}
-
-        _LOGGER.debug("Connect request: %s %s", url, payload)
-        async with self._session.post(url, headers=headers, json=payload) as response:
-            data = await response.json()
-            _LOGGER.debug("Connect response: %s %s", response.status, data)
-            if not data.get("success") or not data.get("token"):
-                _LOGGER.error("Failed to connect: %s", data)
-                raise Exception(f"Connection failed: {data}")
-            return data["token"]
-
-    async def sign_in(self, site_id: int, lat: float, lng: float, accuracy: float) -> Dict[str, Any]:
-        """Sign in to a site."""
-        url = f"{API_BASE_URL}/sign-in"
-        headers = self._get_headers()
-
-        payload = {
-            "method": "sign-in",
-            "automated": False,
-            "location": {
-                "accuracy": accuracy,
-                "lat": lat,
-                "lng": lng
-            },
-            "siteId": site_id,
-            "additional": [],
-            "personalFields": {},
-            "notifyId": None,
-            "messages": []
-        }
-
-        _LOGGER.debug("Sign in request: %s %s", url, payload)
-        async with self._session.post(url, headers=headers, json=payload) as response:
-            _LOGGER.debug("Sign in response status: %s", response.status)
-            response_text = await response.text()
-            _LOGGER.debug("Sign in response body: %s", response_text)
-            response.raise_for_status()
-            return await response.json()
-
-    async def sign_out(self, site_id: int, lat: float, lng: float, accuracy: float) -> Dict[str, Any]:
-        """Sign out from a site."""
-        url = f"{API_BASE_URL}/sign-out"
-        headers = self._get_headers()
-
-        payload = {
-            "automated": False,
-            "location": {
-                "accuracy": accuracy,
-                "lat": lat,
-                "lng": lng
-            },
-            "siteId": site_id,
-            "additional": [],
-            "personalFields": {},
-            "notifyId": None,
-            "messages": []
-        }
-
-        _LOGGER.debug("Sign out request: %s %s", url, payload)
-        async with self._session.post(url, headers=headers, json=payload) as response:
-            _LOGGER.debug("Sign out response status: %s", response.status)
-            response_text = await response.text()
-            _LOGGER.debug("Sign out response body: %s", response_text)
-            response.raise_for_status()
-            return await response.json()
-
-    async def get_config(self) -> Dict[str, Any]:
-        """Get configuration and status."""
-        url = f"{API_BASE_URL}/config-v2"
-        headers = self._get_headers()
-
-        _LOGGER.debug("Get config request: %s", url)
-        async with self._session.get(url, headers=headers) as response:
-            _LOGGER.debug("Get config response status: %s", response.status)
-            response.raise_for_status()
+        if not authenticated:
+            headers.pop("authorization", None)
+        request = self._session.get if method == "GET" else self._session.post
+        kwargs = {"headers": headers, "timeout": aiohttp.ClientTimeout(total=30)}
+        if payload is not None:
+            kwargs["json"] = payload
+        if params is not None:
+            kwargs["params"] = params
+        async with request(f"{API_BASE_URL}/{endpoint}", **kwargs) as response:
+            _LOGGER.debug("Sign In App %s %s returned HTTP %s", method, endpoint, response.status)
+            if response.status == 403 and history:
+                raise SignInAppHistoryPermissionError("Sign In App history access is not permitted.")
+            if response.status in (401, 403):
+                raise SignInAppAuthError("Sign In App authentication was rejected. Reconnect your account.")
+            if response.status >= 400:
+                raise SignInAppError(f"Sign In App returned HTTP {response.status}.")
             try:
                 data = await response.json()
-                _LOGGER.debug("Get config response body: %s", data)
-                return data
-            except Exception as e:
-                response_text = await response.text()
-                _LOGGER.error("Failed to parse get config response: %s", response_text)
-                raise e
+            except (ValueError, aiohttp.ContentTypeError) as err:
+                raise SignInAppError("Sign In App returned an invalid JSON response.") from err
+        if not isinstance(data, expected_type):
+            raise SignInAppError("Sign In App returned an unexpected response format.")
+        if isinstance(data, dict) and data.get("success") is False:
+            raise SignInAppError("Sign In App did not accept the request.")
+        return data
+
+    async def connect(self, code: str) -> str:
+        normalized = normalize_companion_code(code)
+        if not normalized:
+            raise ValueError("Companion code is empty after normalization.")
+        data = await self._request("POST", "connect", {"code": normalized}, authenticated=False)
+        token = data.get("token")
+        if data.get("success") is not True or not isinstance(token, str) or not token.strip():
+            raise SignInAppAuthError("The companion code was not accepted.")
+        return token
+
+    @staticmethod
+    def _attendance_payload(site_id, lat, lng, accuracy):
+        return {
+            "automated": False,
+            "location": {"accuracy": accuracy, "lat": lat, "lng": lng},
+            "siteId": site_id, "additional": [], "personalFields": {}, "notifyId": None, "messages": [],
+        }
+
+    async def sign_in(self, site_id: int, lat: float, lng: float, accuracy: float) -> dict[str, Any]:
+        payload = self._attendance_payload(site_id, lat, lng, accuracy)
+        payload["method"] = "sign-in"
+        return await self._request("POST", "sign-in", payload)
+
+    async def sign_out(self, site_id: int, lat: float, lng: float, accuracy: float) -> dict[str, Any]:
+        return await self._request("POST", "sign-out", self._attendance_payload(site_id, lat, lng, accuracy))
+
+    async def get_config(self) -> dict[str, Any]:
+        return await self._request("GET", "config-v2")
+
+    async def get_history(self, date_from: date, date_to: date) -> list[dict[str, Any]]:
+        """Read this companion account's sessions for a bounded local-date window."""
+        if type(date_from) is not date or type(date_to) is not date:
+            raise ValueError("History bounds must be dates.")
+        if not 0 < (date_to - date_from).days <= 45:
+            raise ValueError("History window must be between 1 and 45 days.")
+        data = await self._request(
+            "GET", "history", params={"dateFrom": date_from.isoformat(), "dateTo": date_to.isoformat()},
+            expected_type=list, history=True,
+        )
+        if len(data) > 10000 or any(not isinstance(row, dict) for row in data):
+            raise SignInAppError("Sign In App returned an unexpected history response.")
+        return data

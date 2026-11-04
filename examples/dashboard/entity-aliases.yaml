@@ -1,0 +1,423 @@
+sensor.attendee_friday_signed_in:
+  report_period: friday
+  report_metric: signed_in
+sensor.attendee_monday_signed_in:
+  report_period: monday
+  report_metric: signed_in
+sensor.attendee_month_activity_appointment:
+  report_period: month
+  report_metric: activity
+  activity_name: Appointment
+sensor.attendee_month_activity_break:
+  report_period: month
+  report_metric: activity
+  activity_name: Break
+sensor.attendee_month_activity_lunch:
+  report_period: month
+  report_metric: activity
+  activity_name: Lunch
+sensor.attendee_month_activity_other_working:
+  report_period: month
+  report_metric: activity
+  activity_name: Other working
+sensor.attendee_month_activity_percentage_appointment:
+  report_period: month
+  report_metric: activity_percentage
+  activity_name: Appointment
+sensor.attendee_month_activity_percentage_break:
+  report_period: month
+  report_metric: activity_percentage
+  activity_name: Break
+sensor.attendee_month_activity_percentage_lunch:
+  report_period: month
+  report_metric: activity_percentage
+  activity_name: Lunch
+sensor.attendee_month_activity_percentage_other_working:
+  report_period: month
+  report_metric: activity_percentage
+  activity_name: Other working
+sensor.attendee_month_activity_percentage_travel:
+  report_period: month
+  report_metric: activity_percentage
+  activity_name: Travel
+sensor.attendee_month_activity_percentage_working:
+  report_period: month
+  report_metric: activity_percentage
+  activity_name: Working
+sensor.attendee_month_activity_quota_percentage_appointment:
+  report_period: month
+  report_metric: activity_quota_percentage
+  activity_name: Appointment
+sensor.attendee_month_activity_quota_percentage_break:
+  report_period: month
+  report_metric: activity_quota_percentage
+  activity_name: Break
+sensor.attendee_month_activity_quota_percentage_lunch:
+  report_period: month
+  report_metric: activity_quota_percentage
+  activity_name: Lunch
+sensor.attendee_month_activity_quota_percentage_other_working:
+  report_period: month
+  report_metric: activity_quota_percentage
+  activity_name: Other working
+sensor.attendee_month_activity_quota_percentage_travel:
+  report_period: month
+  report_metric: activity_quota_percentage
+  activity_name: Travel
+sensor.attendee_month_activity_quota_percentage_working:
+  report_period: month
+  report_metric: activity_quota_percentage
+  activity_name: Working
+sensor.attendee_month_activity_travel:
+  report_period: month
+  report_metric: activity
+  activity_name: Travel
+sensor.attendee_month_activity_working:
+  report_period: month
+  report_metric: activity
+  activity_name: Working
+sensor.attendee_month_activity_working_percentage_other_working:
+  report_period: month
+  report_metric: activity_working_percentage
+  activity_name: Other working
+sensor.attendee_month_activity_working_percentage_travel:
+  report_period: month
+  report_metric: activity_working_percentage
+  activity_name: Travel
+sensor.attendee_month_activity_working_percentage_working:
+  report_period: month
+  report_metric: activity_working_percentage
+  activity_name: Working
+sensor.attendee_month_non_working:
+  report_period: month
+  report_metric: non_working
+sensor.attendee_month_quota:
+  report_period: month
+  report_metric: quota
+sensor.attendee_month_quota_balance:
+  report_period: month
+  report_metric: quota_balance
+sensor.attendee_month_quota_holiday_reduction:
+  report_period: month
+  report_metric: quota_holiday_reduction
+sensor.attendee_month_quota_nominal:
+  report_period: month
+  report_metric: quota_nominal
+sensor.attendee_month_quota_overtime:
+  report_period: month
+  report_metric: quota_overtime
+sensor.attendee_month_quota_overtime_percentage:
+  report_period: month
+  report_metric: quota_overtime_percentage
+sensor.attendee_month_quota_percentage:
+  report_period: month
+  report_metric: quota_percentage
+sensor.attendee_month_quota_remaining:
+  report_period: month
+  report_metric: quota_remaining
+sensor.attendee_month_quota_remaining_percentage:
+  report_period: month
+  report_metric: quota_remaining_percentage
+sensor.attendee_month_quota_used:
+  report_period: month
+  report_metric: quota_used
+sensor.attendee_month_session_count:
+  report_period: month
+  report_metric: session_count
+sensor.attendee_month_signed_in:
+  report_period: month
+  report_metric: signed_in
+sensor.attendee_month_unclassified:
+  report_period: month
+  report_metric: unclassified
+sensor.attendee_month_unclassified_activity:
+  report_period: month
+  report_metric: unclassified_activity
+sensor.attendee_month_working:
+  report_period: month
+  report_metric: working
+sensor.attendee_saturday_signed_in:
+  report_period: saturday
+  report_metric: signed_in
+sensor.attendee_sunday_signed_in:
+  report_period: sunday
+  report_metric: signed_in
+sensor.attendee_thursday_signed_in:
+  report_period: thursday
+  report_metric: signed_in
+sensor.attendee_today_activity_appointment:
+  report_period: today
+  report_metric: activity
+  activity_name: Appointment
+sensor.attendee_today_activity_break:
+  report_period: today
+  report_metric: activity
+  activity_name: Break
+sensor.attendee_today_activity_lunch:
+  report_period: today
+  report_metric: activity
+  activity_name: Lunch
+sensor.attendee_today_activity_other_working:
+  report_period: today
+  report_metric: activity
+  activity_name: Other working
+sensor.attendee_today_activity_percentage_appointment:
+  report_period: today
+  report_metric: activity_percentage
+  activity_name: Appointment
+sensor.attendee_today_activity_percentage_break:
+  report_period: today
+  report_metric: activity_percentage
+  activity_name: Break
+sensor.attendee_today_activity_percentage_lunch:
+  report_period: today
+  report_metric: activity_percentage
+  activity_name: Lunch
+sensor.attendee_today_activity_percentage_other_working:
+  report_period: today
+  report_metric: activity_percentage
+  activity_name: Other working
+sensor.attendee_today_activity_percentage_travel:
+  report_period: today
+  report_metric: activity_percentage
+  activity_name: Travel
+sensor.attendee_today_activity_percentage_working:
+  report_period: today
+  report_metric: activity_percentage
+  activity_name: Working
+sensor.attendee_today_activity_quota_percentage_appointment:
+  report_period: today
+  report_metric: activity_quota_percentage
+  activity_name: Appointment
+sensor.attendee_today_activity_quota_percentage_break:
+  report_period: today
+  report_metric: activity_quota_percentage
+  activity_name: Break
+sensor.attendee_today_activity_quota_percentage_lunch:
+  report_period: today
+  report_metric: activity_quota_percentage
+  activity_name: Lunch
+sensor.attendee_today_activity_quota_percentage_other_working:
+  report_period: today
+  report_metric: activity_quota_percentage
+  activity_name: Other working
+sensor.attendee_today_activity_quota_percentage_travel:
+  report_period: today
+  report_metric: activity_quota_percentage
+  activity_name: Travel
+sensor.attendee_today_activity_quota_percentage_working:
+  report_period: today
+  report_metric: activity_quota_percentage
+  activity_name: Working
+sensor.attendee_today_activity_travel:
+  report_period: today
+  report_metric: activity
+  activity_name: Travel
+sensor.attendee_today_activity_working:
+  report_period: today
+  report_metric: activity
+  activity_name: Working
+sensor.attendee_today_activity_working_percentage_other_working:
+  report_period: today
+  report_metric: activity_working_percentage
+  activity_name: Other working
+sensor.attendee_today_activity_working_percentage_travel:
+  report_period: today
+  report_metric: activity_working_percentage
+  activity_name: Travel
+sensor.attendee_today_activity_working_percentage_working:
+  report_period: today
+  report_metric: activity_working_percentage
+  activity_name: Working
+sensor.attendee_today_non_working:
+  report_period: today
+  report_metric: non_working
+sensor.attendee_today_quota:
+  report_period: today
+  report_metric: quota
+sensor.attendee_today_quota_balance:
+  report_period: today
+  report_metric: quota_balance
+sensor.attendee_today_quota_holiday_reduction:
+  report_period: today
+  report_metric: quota_holiday_reduction
+sensor.attendee_today_quota_nominal:
+  report_period: today
+  report_metric: quota_nominal
+sensor.attendee_today_quota_overtime:
+  report_period: today
+  report_metric: quota_overtime
+sensor.attendee_today_quota_overtime_percentage:
+  report_period: today
+  report_metric: quota_overtime_percentage
+sensor.attendee_today_quota_percentage:
+  report_period: today
+  report_metric: quota_percentage
+sensor.attendee_today_quota_remaining:
+  report_period: today
+  report_metric: quota_remaining
+sensor.attendee_today_quota_remaining_percentage:
+  report_period: today
+  report_metric: quota_remaining_percentage
+sensor.attendee_today_quota_used:
+  report_period: today
+  report_metric: quota_used
+sensor.attendee_today_session_count:
+  report_period: today
+  report_metric: session_count
+sensor.attendee_today_signed_in:
+  report_period: today
+  report_metric: signed_in
+sensor.attendee_today_unclassified:
+  report_period: today
+  report_metric: unclassified
+sensor.attendee_today_unclassified_activity:
+  report_period: today
+  report_metric: unclassified_activity
+sensor.attendee_today_working:
+  report_period: today
+  report_metric: working
+sensor.attendee_tuesday_signed_in:
+  report_period: tuesday
+  report_metric: signed_in
+sensor.attendee_wednesday_signed_in:
+  report_period: wednesday
+  report_metric: signed_in
+sensor.attendee_week_activity_appointment:
+  report_period: week
+  report_metric: activity
+  activity_name: Appointment
+sensor.attendee_week_activity_break:
+  report_period: week
+  report_metric: activity
+  activity_name: Break
+sensor.attendee_week_activity_lunch:
+  report_period: week
+  report_metric: activity
+  activity_name: Lunch
+sensor.attendee_week_activity_other_working:
+  report_period: week
+  report_metric: activity
+  activity_name: Other working
+sensor.attendee_week_activity_percentage_appointment:
+  report_period: week
+  report_metric: activity_percentage
+  activity_name: Appointment
+sensor.attendee_week_activity_percentage_break:
+  report_period: week
+  report_metric: activity_percentage
+  activity_name: Break
+sensor.attendee_week_activity_percentage_lunch:
+  report_period: week
+  report_metric: activity_percentage
+  activity_name: Lunch
+sensor.attendee_week_activity_percentage_other_working:
+  report_period: week
+  report_metric: activity_percentage
+  activity_name: Other working
+sensor.attendee_week_activity_percentage_travel:
+  report_period: week
+  report_metric: activity_percentage
+  activity_name: Travel
+sensor.attendee_week_activity_percentage_working:
+  report_period: week
+  report_metric: activity_percentage
+  activity_name: Working
+sensor.attendee_week_activity_quota_percentage_appointment:
+  report_period: week
+  report_metric: activity_quota_percentage
+  activity_name: Appointment
+sensor.attendee_week_activity_quota_percentage_break:
+  report_period: week
+  report_metric: activity_quota_percentage
+  activity_name: Break
+sensor.attendee_week_activity_quota_percentage_lunch:
+  report_period: week
+  report_metric: activity_quota_percentage
+  activity_name: Lunch
+sensor.attendee_week_activity_quota_percentage_other_working:
+  report_period: week
+  report_metric: activity_quota_percentage
+  activity_name: Other working
+sensor.attendee_week_activity_quota_percentage_travel:
+  report_period: week
+  report_metric: activity_quota_percentage
+  activity_name: Travel
+sensor.attendee_week_activity_quota_percentage_working:
+  report_period: week
+  report_metric: activity_quota_percentage
+  activity_name: Working
+sensor.attendee_week_activity_travel:
+  report_period: week
+  report_metric: activity
+  activity_name: Travel
+sensor.attendee_week_activity_working:
+  report_period: week
+  report_metric: activity
+  activity_name: Working
+sensor.attendee_week_activity_working_percentage_other_working:
+  report_period: week
+  report_metric: activity_working_percentage
+  activity_name: Other working
+sensor.attendee_week_activity_working_percentage_travel:
+  report_period: week
+  report_metric: activity_working_percentage
+  activity_name: Travel
+sensor.attendee_week_activity_working_percentage_working:
+  report_period: week
+  report_metric: activity_working_percentage
+  activity_name: Working
+sensor.attendee_week_non_working:
+  report_period: week
+  report_metric: non_working
+sensor.attendee_week_quota:
+  report_period: week
+  report_metric: quota
+sensor.attendee_week_quota_balance:
+  report_period: week
+  report_metric: quota_balance
+sensor.attendee_week_quota_holiday_reduction:
+  report_period: week
+  report_metric: quota_holiday_reduction
+sensor.attendee_week_quota_nominal:
+  report_period: week
+  report_metric: quota_nominal
+sensor.attendee_week_quota_overtime:
+  report_period: week
+  report_metric: quota_overtime
+sensor.attendee_week_quota_overtime_percentage:
+  report_period: week
+  report_metric: quota_overtime_percentage
+sensor.attendee_week_quota_percentage:
+  report_period: week
+  report_metric: quota_percentage
+sensor.attendee_week_quota_remaining:
+  report_period: week
+  report_metric: quota_remaining
+sensor.attendee_week_quota_remaining_percentage:
+  report_period: week
+  report_metric: quota_remaining_percentage
+sensor.attendee_week_quota_used:
+  report_period: week
+  report_metric: quota_used
+sensor.attendee_week_session_count:
+  report_period: week
+  report_metric: session_count
+sensor.attendee_week_signed_in:
+  report_period: week
+  report_metric: signed_in
+sensor.attendee_week_to_yesterday_signed_in:
+  report_period: week_to_yesterday
+  report_metric: signed_in
+sensor.attendee_week_unclassified:
+  report_period: week
+  report_metric: unclassified
+sensor.attendee_week_unclassified_activity:
+  report_period: week
+  report_metric: unclassified_activity
+sensor.attendee_week_working:
+  report_period: week
+  report_metric: working
+sensor.attendee_yesterday_signed_in:
+  report_period: yesterday
+  report_metric: signed_in

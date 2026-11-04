@@ -35,7 +35,8 @@ Authentication should behave as a narrow, explicit capability grant:
 
 - repository code does not model reconnect explicitly
 - request headers emulate a client fingerprint that can drift
-- no fixture-backed auth contract tests exist yet
+- automatic `/reconnect` renewal remains unimplemented; 1.1.0 instead handles HTTP 401/403 through Home Assistant reauthentication with a fresh companion code for the same visitor
+- synthetic transport and flow tests cover auth rejection, credential-safe logging, wrong-account rejection and preservation of routing during recovery
 
 ## Documentation rule
 

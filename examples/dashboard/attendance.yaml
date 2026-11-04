@@ -1,0 +1,990 @@
+views:
+  - title: Attendance
+    path: attendance
+    icon: mdi:briefcase-clock
+    type: sections
+    max_columns: 2
+    sections:
+      - type: grid
+        cards:
+          - type: heading
+            heading: Attendance
+            heading_style: title
+            icon: mdi:login
+          - show_name: true
+            show_icon: true
+            type: button
+            entity: sensor.attendee_status
+            tap_action:
+              action: perform-action
+              perform_action: signinapp.sign_in
+              target: {}
+              data:
+                device_id: REPLACE_WITH_DEVICE_ID
+                site_id: 2002
+            name: Sign in · secondary site
+            grid_options:
+              columns: 4
+              rows: 2
+          - show_name: true
+            show_icon: true
+            type: button
+            entity: sensor.attendee_status
+            tap_action:
+              action: perform-action
+              perform_action: signinapp.sign_in
+              target: {}
+              data:
+                device_id: REPLACE_WITH_DEVICE_ID
+                site_id: 1001
+            name: Sign in · primary site
+            grid_options:
+              columns: 4
+              rows: 2
+          - show_name: true
+            show_icon: true
+            type: button
+            entity: sensor.attendee_status
+            tap_action:
+              action: perform-action
+              perform_action: signinapp.sign_out
+              target: {}
+              data:
+                device_id: REPLACE_WITH_DEVICE_ID
+            name: Sign Out
+            grid_options:
+              columns: 4
+              rows: 2
+          - type: tile
+            entity: sensor.attendee_status
+            name: Status
+            vertical: false
+            features_position: bottom
+          - type: tile
+            entity: sensor.customzone_campus
+            name: Presence
+            vertical: false
+            features_position: bottom
+          - type: heading
+            heading: Logged Time
+            heading_style: subtitle
+            icon: mdi:briefcase-clock
+          - type: custom:button-card
+            entity: sensor.attendee_week_signed_in
+            name: This week
+            icon: mdi:calendar-week
+            show_state: true
+            state_display: "[[[ const raw=entity?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+              'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+              hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+            tap_action:
+              action: more-info
+            custom_fields:
+              days:
+                card:
+                  type: grid
+                  columns: 7
+                  square: false
+                  cards:
+                    - type: custom:button-card
+                      entity: sensor.attendee_monday_signed_in
+                      name: Mon
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<0)return
+                        \"0m\"; const raw=states[\"sensor.attendee_monday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Monday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+                    - type: custom:button-card
+                      entity: sensor.attendee_tuesday_signed_in
+                      name: Tue
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<1)return
+                        \"0m\"; const raw=states[\"sensor.attendee_tuesday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Tuesday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+                    - type: custom:button-card
+                      entity: sensor.attendee_wednesday_signed_in
+                      name: Wed
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<2)return
+                        \"0m\"; const raw=states[\"sensor.attendee_wednesday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Wednesday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+                    - type: custom:button-card
+                      entity: sensor.attendee_thursday_signed_in
+                      name: Thu
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<3)return
+                        \"0m\"; const raw=states[\"sensor.attendee_thursday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Thursday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+                    - type: custom:button-card
+                      entity: sensor.attendee_friday_signed_in
+                      name: Fri
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<4)return
+                        \"0m\"; const raw=states[\"sensor.attendee_friday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Friday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+                    - type: custom:button-card
+                      entity: sensor.attendee_saturday_signed_in
+                      name: Sat
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<5)return
+                        \"0m\"; const raw=states[\"sensor.attendee_saturday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Saturday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+                    - type: custom:button-card
+                      entity: sensor.attendee_sunday_signed_in
+                      name: Sun
+                      show_icon: false
+                      show_state: true
+                      state_display: "[[[ const days=[\"Monday\", \"Tuesday\", \"Wednesday\", \"Thursday\", \"Friday\", \"\
+                        Saturday\", \"Sunday\"];const currentDay=new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone});if(days.indexOf(currentDay)<6)return
+                        \"0m\"; const raw=states[\"sensor.attendee_sunday_signed_in\"]?.state;if(raw===undefined||raw===null||raw===''||!Number.isFinite(Number(raw)))return
+                        'Unavailable';const minutes=Math.floor(Number(raw)*4+0.5)*15;const hours=Math.floor(minutes/60),remainder=minutes%60;return
+                        hours?hours+'h'+(remainder?' '+remainder+'m':''):minutes+'m'; ]]]"
+                      tap_action:
+                        action: more-info
+                      hold_action:
+                        action: none
+                      styles:
+                        card:
+                          - background: transparent
+                          - border: none
+                          - box-shadow: none
+                          - padding: 4px 0
+                          - height: 44px
+                          - border-radius: 6px
+                        grid:
+                          - grid-template-areas: '"n" "s"'
+                          - grid-template-columns: minmax(0,1fr)
+                          - grid-template-rows: 17px 19px
+                        name:
+                          - font-size: 11px
+                          - font-weight: '600'
+                          - color: "[[[ return new Date().toLocaleDateString('en-GB',{weekday:'long',timeZone:hass.config.time_zone})===\"\
+                              Sunday\"?'var(--accent-color)':'var(--secondary-text-color)'; ]]]"
+                        state:
+                          - font-size: 10.5px
+                          - font-weight: '600'
+                          - white-space: nowrap
+                          - color: var(--primary-text-color)
+                          - font-variant-numeric: tabular-nums
+            styles:
+              card:
+                - padding: 12px 10px
+                - border-radius: 16px
+                - border: none
+                - box-shadow: none
+                - --grid-card-gap: 2px
+              grid:
+                - grid-template-areas: '"i n s" "days days days"'
+                - grid-template-columns: 24px minmax(0,1fr) auto
+                - grid-template-rows: 28px auto
+                - column-gap: 8px
+                - row-gap: 10px
+              icon:
+                - width: 22px
+                - color: var(--accent-color)
+              name:
+                - justify-self: start
+                - font-size: 14px
+              state:
+                - justify-self: end
+                - font-size: 16px
+                - font-weight: '600'
+                - color: var(--primary-text-color)
+              custom_fields:
+                days:
+                  - width: 100%
+                  - min-width: '0'
+            triggers_update:
+              - sensor.attendee_week_signed_in
+              - sensor.attendee_monday_signed_in
+              - sensor.attendee_tuesday_signed_in
+              - sensor.attendee_wednesday_signed_in
+              - sensor.attendee_thursday_signed_in
+              - sensor.attendee_friday_signed_in
+              - sensor.attendee_saturday_signed_in
+              - sensor.attendee_sunday_signed_in
+        visibility:
+          - condition: user
+            users:
+              - REPLACE_WITH_HA_USER_ID
+      - type: grid
+        visibility:
+          - condition: user
+            users:
+              - REPLACE_WITH_HA_USER_ID
+        cards:
+          - type: heading
+            heading: Attendance reports
+            heading_style: title
+            icon: mdi:briefcase-clock
+          - type: entities
+            show_header_toggle: false
+            state_color: false
+            entities:
+              - type: custom:fold-entity-row
+                head:
+                  entity: sensor.attendee_today_working
+                  name: Today · working time
+                  icon: mdi:calendar-today
+                  tap_action:
+                    action: fire-dom-event
+                    fold_row: true
+                entities:
+                  - entity: sensor.attendee_today_signed_in
+                    name: Signed in
+                    icon: mdi:login
+                  - entity: sensor.attendee_today_non_working
+                    name: Non-working time
+                    icon: mdi:coffee-outline
+                  - entity: sensor.attendee_today_session_count
+                    name: Sign-in sessions
+                    icon: mdi:counter
+                  - type: custom:fold-entity-row
+                    head:
+                      entity: sensor.attendee_today_quota_percentage
+                      name: Quota completed
+                      icon: mdi:target
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - entity: sensor.attendee_today_quota
+                        name: Target
+                        icon: mdi:target
+                      - entity: sensor.attendee_today_quota_used
+                        name: Working time counted
+                        icon: mdi:briefcase-check
+                      - entity: sensor.attendee_today_quota_remaining
+                        name: Time remaining
+                        icon: mdi:timer-sand
+                      - entity: sensor.attendee_today_quota_remaining_percentage
+                        name: Remaining
+                        icon: mdi:percent-outline
+                      - entity: sensor.attendee_today_quota_overtime
+                        name: Overtime
+                        icon: mdi:clock-plus-outline
+                      - entity: sensor.attendee_today_quota_overtime_percentage
+                        name: Overtime percentage
+                        icon: mdi:percent-outline
+                      - entity: sensor.attendee_today_quota_balance
+                        name: Time balance
+                        icon: mdi:scale-balance
+                      - entity: sensor.attendee_today_quota_nominal
+                        name: Before holiday adjustment
+                        icon: mdi:calendar-blank
+                      - entity: sensor.attendee_today_quota_holiday_reduction
+                        name: Holiday allowance
+                        icon: mdi:calendar-star
+                    open: false
+                    padding: 8
+                  - type: custom:fold-entity-row
+                    head:
+                      type: section
+                      label: Activity breakdown
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_today_activity_working
+                          name: Working
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_today_activity_percentage_working
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_working_percentage_working
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_quota_percentage_working
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_today_activity_break
+                          name: Break
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_today_activity_percentage_break
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_quota_percentage_break
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_today_activity_lunch
+                          name: Lunch
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_today_activity_percentage_lunch
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_quota_percentage_lunch
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_today_activity_appointment
+                          name: Appointment
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_today_activity_percentage_appointment
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_quota_percentage_appointment
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_today_activity_travel
+                          name: Travel
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_today_activity_percentage_travel
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_working_percentage_travel
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_quota_percentage_travel
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_today_activity_other_working
+                          name: Other working
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_today_activity_percentage_other_working
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_working_percentage_other_working
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_today_activity_quota_percentage_other_working
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                    open: false
+                    padding: 8
+                  - type: custom:fold-entity-row
+                    head:
+                      type: section
+                      label: Reporting details
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - entity: sensor.attendee_today_unclassified
+                        name: Time without working classification
+                        icon: mdi:help-circle-outline
+                      - entity: sensor.attendee_today_unclassified_activity
+                        name: Time without an activity
+                        icon: mdi:help-circle-outline
+                    open: false
+                    padding: 8
+                open: false
+                padding: 8
+              - type: custom:fold-entity-row
+                head:
+                  entity: sensor.attendee_week_working
+                  name: This week · working time
+                  icon: mdi:calendar-week
+                  tap_action:
+                    action: fire-dom-event
+                    fold_row: true
+                entities:
+                  - entity: sensor.attendee_week_signed_in
+                    name: Signed in
+                    icon: mdi:login
+                  - entity: sensor.attendee_week_non_working
+                    name: Non-working time
+                    icon: mdi:coffee-outline
+                  - entity: sensor.attendee_week_session_count
+                    name: Sign-in sessions
+                    icon: mdi:counter
+                  - type: custom:fold-entity-row
+                    head:
+                      entity: sensor.attendee_week_quota_percentage
+                      name: Quota completed
+                      icon: mdi:target
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - entity: sensor.attendee_week_quota
+                        name: Target
+                        icon: mdi:target
+                      - entity: sensor.attendee_week_quota_used
+                        name: Working time counted
+                        icon: mdi:briefcase-check
+                      - entity: sensor.attendee_week_quota_remaining
+                        name: Time remaining
+                        icon: mdi:timer-sand
+                      - entity: sensor.attendee_week_quota_remaining_percentage
+                        name: Remaining
+                        icon: mdi:percent-outline
+                      - entity: sensor.attendee_week_quota_overtime
+                        name: Overtime
+                        icon: mdi:clock-plus-outline
+                      - entity: sensor.attendee_week_quota_overtime_percentage
+                        name: Overtime percentage
+                        icon: mdi:percent-outline
+                      - entity: sensor.attendee_week_quota_balance
+                        name: Time balance
+                        icon: mdi:scale-balance
+                      - entity: sensor.attendee_week_quota_nominal
+                        name: Before holiday adjustment
+                        icon: mdi:calendar-blank
+                      - entity: sensor.attendee_week_quota_holiday_reduction
+                        name: Holiday allowance
+                        icon: mdi:calendar-star
+                    open: false
+                    padding: 8
+                  - type: custom:fold-entity-row
+                    head:
+                      type: section
+                      label: Activity breakdown
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_week_activity_working
+                          name: Working
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_week_activity_percentage_working
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_working_percentage_working
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_quota_percentage_working
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_week_activity_break
+                          name: Break
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_week_activity_percentage_break
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_quota_percentage_break
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_week_activity_lunch
+                          name: Lunch
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_week_activity_percentage_lunch
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_quota_percentage_lunch
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_week_activity_appointment
+                          name: Appointment
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_week_activity_percentage_appointment
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_quota_percentage_appointment
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_week_activity_travel
+                          name: Travel
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_week_activity_percentage_travel
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_working_percentage_travel
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_quota_percentage_travel
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_week_activity_other_working
+                          name: Other working
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_week_activity_percentage_other_working
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_working_percentage_other_working
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_week_activity_quota_percentage_other_working
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                    open: false
+                    padding: 8
+                  - type: custom:fold-entity-row
+                    head:
+                      type: section
+                      label: Reporting details
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - entity: sensor.attendee_week_unclassified
+                        name: Time without working classification
+                        icon: mdi:help-circle-outline
+                      - entity: sensor.attendee_week_unclassified_activity
+                        name: Time without an activity
+                        icon: mdi:help-circle-outline
+                    open: false
+                    padding: 8
+                open: true
+                padding: 8
+              - type: custom:fold-entity-row
+                head:
+                  entity: sensor.attendee_month_working
+                  name: This month · working time
+                  icon: mdi:calendar-month
+                  tap_action:
+                    action: fire-dom-event
+                    fold_row: true
+                entities:
+                  - entity: sensor.attendee_month_signed_in
+                    name: Signed in
+                    icon: mdi:login
+                  - entity: sensor.attendee_month_non_working
+                    name: Non-working time
+                    icon: mdi:coffee-outline
+                  - entity: sensor.attendee_month_session_count
+                    name: Sign-in sessions
+                    icon: mdi:counter
+                  - type: custom:fold-entity-row
+                    head:
+                      entity: sensor.attendee_month_quota_percentage
+                      name: Quota completed
+                      icon: mdi:target
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - entity: sensor.attendee_month_quota
+                        name: Target
+                        icon: mdi:target
+                      - entity: sensor.attendee_month_quota_used
+                        name: Working time counted
+                        icon: mdi:briefcase-check
+                      - entity: sensor.attendee_month_quota_remaining
+                        name: Time remaining
+                        icon: mdi:timer-sand
+                      - entity: sensor.attendee_month_quota_remaining_percentage
+                        name: Remaining
+                        icon: mdi:percent-outline
+                      - entity: sensor.attendee_month_quota_overtime
+                        name: Overtime
+                        icon: mdi:clock-plus-outline
+                      - entity: sensor.attendee_month_quota_overtime_percentage
+                        name: Overtime percentage
+                        icon: mdi:percent-outline
+                      - entity: sensor.attendee_month_quota_balance
+                        name: Time balance
+                        icon: mdi:scale-balance
+                      - entity: sensor.attendee_month_quota_nominal
+                        name: Before holiday adjustment
+                        icon: mdi:calendar-blank
+                      - entity: sensor.attendee_month_quota_holiday_reduction
+                        name: Holiday allowance
+                        icon: mdi:calendar-star
+                    open: false
+                    padding: 8
+                  - type: custom:fold-entity-row
+                    head:
+                      type: section
+                      label: Activity breakdown
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_month_activity_working
+                          name: Working
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_month_activity_percentage_working
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_working_percentage_working
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_quota_percentage_working
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_month_activity_break
+                          name: Break
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_month_activity_percentage_break
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_quota_percentage_break
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_month_activity_lunch
+                          name: Lunch
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_month_activity_percentage_lunch
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_quota_percentage_lunch
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_month_activity_appointment
+                          name: Appointment
+                          icon: mdi:coffee-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_month_activity_percentage_appointment
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_quota_percentage_appointment
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_month_activity_travel
+                          name: Travel
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_month_activity_percentage_travel
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_working_percentage_travel
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_quota_percentage_travel
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                      - type: custom:fold-entity-row
+                        head:
+                          entity: sensor.attendee_month_activity_other_working
+                          name: Other working
+                          icon: mdi:briefcase-outline
+                          tap_action:
+                            action: fire-dom-event
+                            fold_row: true
+                        entities:
+                          - entity: sensor.attendee_month_activity_percentage_other_working
+                            name: Share of signed-in time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_working_percentage_other_working
+                            name: Share of working time
+                            icon: mdi:percent-outline
+                          - entity: sensor.attendee_month_activity_quota_percentage_other_working
+                            name: Quota contribution
+                            icon: mdi:target
+                        open: false
+                        padding: 8
+                    open: false
+                    padding: 8
+                  - type: custom:fold-entity-row
+                    head:
+                      type: section
+                      label: Reporting details
+                      tap_action:
+                        action: fire-dom-event
+                        fold_row: true
+                    entities:
+                      - entity: sensor.attendee_month_unclassified
+                        name: Time without working classification
+                        icon: mdi:help-circle-outline
+                      - entity: sensor.attendee_month_unclassified_activity
+                        name: Time without an activity
+                        icon: mdi:help-circle-outline
+                    open: false
+                    padding: 8
+                open: false
+                padding: 8
+            grid_options:
+              columns: 12
+              rows: auto

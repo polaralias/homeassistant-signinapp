@@ -285,6 +285,8 @@ def resolve_sign_out_context(
     current_session_location = current_session.get("location")
 
     configured_location = get_configured_location(config_data, site_id=explicit_site_id)
+    if explicit_site_id is not None and configured_location is None:
+        return None
     if configured_location is not None:
         configured_site_id = configured_location[CONF_SITE_ID]
         configured_site_type = configured_location[CONF_SITE_TYPE]
@@ -348,6 +350,8 @@ def resolve_sign_out_context(
     api_site_id = resolve_current_site_id(status_data)
     api_site_type = resolve_site_type_from_config(api_site_id, config_data)
     if api_site_id is not None:
+        if get_configured_location(config_data, site_id=api_site_id) is None:
+            return None
         return {
             "site_id": api_site_id,
             "site_type": api_site_type,
@@ -359,7 +363,11 @@ def resolve_sign_out_context(
             ),
         }
 
-    if current_session_site_id is not None and current_session_site_type in (SITE_TYPE_OFFICE, SITE_TYPE_REMOTE):
+    if (
+        current_session_site_id is not None
+        and current_session_site_type in (SITE_TYPE_OFFICE, SITE_TYPE_REMOTE)
+        and get_configured_location(config_data, site_id=current_session_site_id) is not None
+    ):
         return {
             "site_id": current_session_site_id,
             "site_type": current_session_site_type,
@@ -382,7 +390,7 @@ def resolve_sensor_state(
 
     returning_visitor = status_data.get("returningVisitor") or {}
     status = returning_visitor.get("status")
-    if not status:
+    if not isinstance(status, str) or not status:
         return "unknown"
 
     status = status.lower()
@@ -401,7 +409,7 @@ def resolve_sensor_state(
     if status == "signed_out":
         return "signed_out"
 
-    return status
+    return "unknown"
 
 
 def resolve_sensor_status_reason(
@@ -418,7 +426,7 @@ def resolve_sensor_status_reason(
 
     returning_visitor = status_data.get("returningVisitor") or {}
     status = returning_visitor.get("status")
-    if not status:
+    if not isinstance(status, str) or not status:
         return "backend_contract_mismatch"
 
     status = status.lower()
@@ -432,6 +440,8 @@ def resolve_sensor_status_reason(
             current_session = current_session or {}
             if coerce_int(current_session.get("site_id")) is None:
                 return "routing_ambiguous"
+            if get_configured_location(config_data, site_id=current_session.get("site_id")) is None:
+                return "target_not_configured"
         return None
 
     if status == "signed_out":
@@ -440,7 +450,7 @@ def resolve_sensor_status_reason(
     if status == "unknown":
         return "backend_contract_mismatch"
 
-    return None
+    return "backend_contract_mismatch"
 
 
 def _lookup_site_label(status_data: dict[str, Any] | None, site_id: int | None) -> str | None:

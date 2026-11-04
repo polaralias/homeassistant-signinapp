@@ -23,7 +23,7 @@
       },
       "reconfigure": {
         "title": "Reconfigure Sign In App",
-        "description": "Update your site configuration. If you need to update your Companion Code, please remove and re-add the integration."
+        "description": "Review your configured work locations. Expired credentials can be reconnected without removing the integration."
       },
       "site": {
         "title": "Configure work location",
@@ -33,16 +33,26 @@
           "label": "Location name",
           "distance": "Distance from location (metres)"
         }
+      },
+      "reauth_confirm": {
+        "title": "Reconnect Sign In App",
+        "description": "Enter a new companion code for the same account. Your configured locations and entity identity will be kept.",
+        "data": {
+          "companion_code": "Companion Code"
+        }
       }
     },
     "error": {
       "connect_error": "Failed to connect with the provided code. Please check and try again.",
       "site_selection_invalid": "Choose valid sites before continuing.",
-      "no_sites_available": "No sites are available. Check your Sign In App access and try setup again."
+      "no_sites_available": "No sites are available. Check your Sign In App access and try setup again.",
+      "wrong_account": "This code belongs to a different account, or its account identity could not be verified."
     },
     "abort": {
       "already_configured": "Device is already configured",
-      "reconfigure_successful": "Reconfiguration successful"
+      "reconfigure_successful": "Reconfiguration successful",
+      "reauth_successful": "Account reconnected successfully.",
+      "reauth_entry_missing": "The integration entry no longer exists."
     }
   },
   "entity": {
@@ -54,6 +64,68 @@
           "signed_out": "Signed Out",
           "unknown": "Unknown"
         }
+      }
+    }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Attendance reporting and quotas",
+        "description": "Enter your normal quota and its period. For example, 37.5 hours per 1 week, a quota per 10 days, per 2 weeks or per 6 months. Weekly anchors must be Mondays; monthly anchors must be the first day of a month.\n\nRollups distribute the quota across normal workdays and compute other period targets. Holiday adjustment removes holiday allocations without increasing other days. Both are optional.",
+        "data": {
+          "quota_hours": "Quota hours",
+          "quota_unit": "Period unit",
+          "quota_length": "Number of units",
+          "quota_anchor": "Period start / anchor date",
+          "workdays": "Normal workdays",
+          "quota_basis": "Count toward quota",
+          "quota_rollups": "Convert quota into other reporting periods",
+          "holiday_adjustment": "Adjust quota for public/custom holidays"
+        }
+      },
+      "holidays": {
+        "title": "Holiday calendar",
+        "description": "Choose a country for locally calculated public holidays, or use custom dates only. Observed holidays are included.",
+        "data": {
+          "holiday_country": "Holiday country"
+        }
+      },
+      "calendar": {
+        "title": "Holiday region and additional dates",
+        "description": "Choose a subdivision where applicable. Additional dates use YYYY-MM-DD, one per line. These dates reduce the quota only when holiday adjustment is enabled.",
+        "data": {
+          "holiday_subdivision": "Holiday region",
+          "custom_holidays": "Additional holiday dates"
+        }
+      }
+    },
+    "error": {
+      "invalid_reporting_options": "Check quota hours, period length, anchor date, workdays and holiday dates. Periods are limited to 366 days, 52 weeks or 12 months."
+    }
+  },
+  "selector": {
+    "quota_unit": {
+      "options": {
+        "days": "Days",
+        "weeks": "Weeks",
+        "months": "Calendar months"
+      }
+    },
+    "quota_basis": {
+      "options": {
+        "working": "Activities marked as working",
+        "signed_in": "All signed-in time"
+      }
+    },
+    "workdays": {
+      "options": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
       }
     }
   }
