@@ -66,5 +66,67 @@
         }
       }
     }
+  },
+  "options": {
+    "step": {
+      "init": {
+        "title": "Attendance reporting and quotas",
+        "description": "Enter your normal quota and its period. For example, 37.5 hours per 1 week, a quota per 10 days, per 2 weeks or per 6 months. Weekly anchors must be Mondays; monthly anchors must be the first day of a month.\n\nRollups distribute the quota across normal workdays and compute other period targets. Holiday adjustment removes holiday allocations without increasing other days. Both are optional.",
+        "data": {
+          "quota_hours": "Quota hours",
+          "quota_unit": "Period unit",
+          "quota_length": "Number of units",
+          "quota_anchor": "Period start / anchor date",
+          "workdays": "Normal workdays",
+          "quota_basis": "Count toward quota",
+          "quota_rollups": "Convert quota into other reporting periods",
+          "holiday_adjustment": "Adjust quota for public/custom holidays"
+        }
+      },
+      "holidays": {
+        "title": "Holiday calendar",
+        "description": "Choose a country for locally calculated public holidays, or use custom dates only. Observed holidays are included.",
+        "data": {
+          "holiday_country": "Holiday country"
+        }
+      },
+      "calendar": {
+        "title": "Holiday region and additional dates",
+        "description": "Choose a subdivision where applicable. Additional dates use YYYY-MM-DD, one per line. These dates reduce the quota only when holiday adjustment is enabled.",
+        "data": {
+          "holiday_subdivision": "Holiday region",
+          "custom_holidays": "Additional holiday dates"
+        }
+      }
+    },
+    "error": {
+      "invalid_reporting_options": "Check quota hours, period length, anchor date, workdays and holiday dates. Periods are limited to 366 days, 52 weeks or 12 months."
+    }
+  },
+  "selector": {
+    "quota_unit": {
+      "options": {
+        "days": "Days",
+        "weeks": "Weeks",
+        "months": "Calendar months"
+      }
+    },
+    "quota_basis": {
+      "options": {
+        "working": "Activities marked as working",
+        "signed_in": "All signed-in time"
+      }
+    },
+    "workdays": {
+      "options": {
+        "monday": "Monday",
+        "tuesday": "Tuesday",
+        "wednesday": "Wednesday",
+        "thursday": "Thursday",
+        "friday": "Friday",
+        "saturday": "Saturday",
+        "sunday": "Sunday"
+      }
+    }
   }
 }

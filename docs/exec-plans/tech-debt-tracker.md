@@ -33,6 +33,11 @@ Explicit sign-out targets must be configured and enabled; invalid explicit IDs c
 
 Transport responses reject authentication errors, invalid JSON shapes and explicit success=false. A mutation is sent once, then up to three config-v2 reads check the expected status (and site for sign-in). Local session state is committed only after confirmation. An unconfirmed request may have reached the backend: check attendance before retrying. There is no automatic mutation retry.
 
-HTTP 401/403 starts Home Assistant reauthentication. A fresh companion code must identify the same visitor; successful recovery preserves routing and config entry identity. Unknown backend statuses project to canonical unknown. Request logs contain method, endpoint and HTTP status, never credentials or response bodies.
+HTTP 401/403 starts Home Assistant reauthentication, except history-only 403 which reports missing history permission. A fresh companion code must identify the same visitor; successful recovery preserves routing and config entry identity. Unknown backend statuses project to canonical unknown. Request logs contain method, endpoint and HTTP status, never credentials or response bodies.
 
 Regression tests use synthetic responses and do not change real attendance. Linux CI covers HA 2025.1.4/Python 3.12 and HA 2026.10.4/Python 3.14. The external backend contract still requires live operator verification.
+
+Reporting is implemented in 1.2.0; see the [reporting contract](../product-specs/attendance-reporting.md).
+The closed-session wire format has dated read-only evidence. Open-session response
+shape still needs a suitable read-only live capture; defensive tests cover missing
+and null out times without asserting those shapes were observed.

@@ -2,6 +2,7 @@
 from __future__ import annotations
 
 import logging
+from datetime import date
 from typing import Any
 
 import aiohttp
@@ -29,6 +30,10 @@ class SignInAppAuthError(SignInAppError):
     """The backend rejected credentials; the config entry needs reauthentication."""
 
 
+class SignInAppHistoryPermissionError(SignInAppError):
+    """History access is not permitted; current attendance may still work."""
+
+
 class SignInAppApi:
     """Transport client; never log credentials or personal response bodies."""
 
@@ -46,7 +51,8 @@ class SignInAppApi:
             headers["authorization"] = f"Bearer {self._token}"
         return headers
 
-    async def _request(self, method: str, endpoint: str, payload=None, *, authenticated=True) -> dict[str, Any]:
+    async def _request(self, method: str, endpoint: str, payload=None, *, authenticated=True,
+                       params=None, expected_type=dict, history=False):
         headers = self._get_headers()
         if not authenticated:
             headers.pop("authorization", None)
@@ -54,8 +60,12 @@ class SignInAppApi:
         kwargs = {"headers": headers, "timeout": aiohttp.ClientTimeout(total=30)}
         if payload is not None:
             kwargs["json"] = payload
+        if params is not None:
+            kwargs["params"] = params
         async with request(f"{API_BASE_URL}/{endpoint}", **kwargs) as response:
             _LOGGER.debug("Sign In App %s %s returned HTTP %s", method, endpoint, response.status)
+            if response.status == 403 and history:
+                raise SignInAppHistoryPermissionError("Sign In App history access is not permitted.")
             if response.status in (401, 403):
                 raise SignInAppAuthError("Sign In App authentication was rejected. Reconnect your account.")
             if response.status >= 400:
@@ -64,9 +74,9 @@ class SignInAppApi:
                 data = await response.json()
             except (ValueError, aiohttp.ContentTypeError) as err:
                 raise SignInAppError("Sign In App returned an invalid JSON response.") from err
-        if not isinstance(data, dict):
+        if not isinstance(data, expected_type):
             raise SignInAppError("Sign In App returned an unexpected response format.")
-        if data.get("success") is False:
+        if isinstance(data, dict) and data.get("success") is False:
             raise SignInAppError("Sign In App did not accept the request.")
         return data
 
@@ -98,3 +108,17 @@ class SignInAppApi:
 
     async def get_config(self) -> dict[str, Any]:
         return await self._request("GET", "config-v2")
+
+    async def get_history(self, date_from: date, date_to: date) -> list[dict[str, Any]]:
+        """Read this companion account's sessions for a bounded local-date window."""
+        if type(date_from) is not date or type(date_to) is not date:
+            raise ValueError("History bounds must be dates.")
+        if not 0 < (date_to - date_from).days <= 45:
+            raise ValueError("History window must be between 1 and 45 days.")
+        data = await self._request(
+            "GET", "history", params={"dateFrom": date_from.isoformat(), "dateTo": date_to.isoformat()},
+            expected_type=list, history=True,
+        )
+        if len(data) > 10000 or any(not isinstance(row, dict) for row in data):
+            raise SignInAppError("Sign In App returned an unexpected history response.")
+        return data

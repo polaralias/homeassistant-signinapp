@@ -77,3 +77,10 @@ Any verification artefact stored in the repo must redact:
 ## Credential recovery and logging
 
 The 1.1.0 transport logs only request method, endpoint and status. Companion codes, access tokens and personal response payloads are excluded even at debug level. Reauthentication checks visitor identity before replacing a token and preserves the existing site configuration. Synthetic log-capture tests defend this boundary.
+
+Attendance reporting reuses the companion account credential to read only its own
+history. The integration retains a bounded in-memory cache, without storing raw
+history on disk or exposing visitor photos, site names, or raw sessions as entity
+attributes. Numeric reports and activity labels are visible to users with HA entity
+access and may enter Recorder. Holiday calculations run locally; no attendance is
+sent to a holiday service. History permission failures do not widen account access.

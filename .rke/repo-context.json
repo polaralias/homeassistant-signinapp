@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 11,
+  "revision": 16,
   "knowledge": [
     {
       "path": "docs/exec-plans/tech-debt-tracker.md",
@@ -12,24 +12,24 @@
         "tests/test_config_flow.py"
       ],
       "verified": {
-        "verifiedAt": "2026-11-02T05:59:59.261Z",
-        "evidence": "Reviewed causal candidate docs and rebuilt task navigation. Auth architecture, security, reliability and attendance contract match same-account recovery, enabled targets, safe logging and confirmation before caching. Historical backend evidence remains dated; product and glossary semantics remain valid. All 90 tests pass on both HA versions and live setup loads without changing attendance.",
+        "verifiedAt": "2026-11-04T19:20:32.036Z",
+        "evidence": "Reviewed reporting addition against new options/history behavior; dated existing site-localization evidence remains historical and current routing unchanged. Recorded remaining open-session API observation limitation.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
-            "sha256": "1705bf3564b763b7cae38fe38a3e55773d9ac6a467fdf18d2af90241d3340141"
+            "sha256": "38df3e8975a29c0fab3fe6cbc48b048a5495d8eee3b60d16f47b959cfc81ff07"
           },
           {
             "path": "custom_components/signinapp/strings.json",
-            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "custom_components/signinapp/translations/en.json",
-            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "docs/exec-plans/tech-debt-tracker.md",
-            "sha256": "0746538c246c1b61710ecdfbdf5561a4db3a63cb2d64c9ca95097259f60383d5"
+            "sha256": "168441f8e96be626487b0614580a97f991e6ad0cd98f563f1dfd354b3cbe8015"
           },
           {
             "path": "tests/test_config_flow.py",
@@ -52,24 +52,24 @@
         "tests/test_translations.py"
       ],
       "verified": {
-        "verifiedAt": "2026-11-02T05:59:58.379Z",
-        "evidence": "Reviewed causal candidate docs and rebuilt task navigation. Auth architecture, security, reliability and attendance contract match same-account recovery, enabled targets, safe logging and confirmation before caching. Historical backend evidence remains dated; product and glossary semantics remain valid. All 90 tests pass on both HA versions and live setup loads without changing attendance.",
+        "verifiedAt": "2026-11-04T19:20:35.233Z",
+        "evidence": "Existing attendance routing and confirmation unchanged; clarified history-only 403 cannot trigger credential replacement. 127 HA2025 tests and 37 current-HA reporting tests pass; existing live primary identity and automation configurations preserved.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/config_flow.py",
-            "sha256": "1705bf3564b763b7cae38fe38a3e55773d9ac6a467fdf18d2af90241d3340141"
+            "sha256": "38df3e8975a29c0fab3fe6cbc48b048a5495d8eee3b60d16f47b959cfc81ff07"
           },
           {
             "path": "custom_components/signinapp/strings.json",
-            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "custom_components/signinapp/translations/en.json",
-            "sha256": "813ad26963421f73117e7621745be8b64b92b3a13175f358545af1d259910e43"
+            "sha256": "455783dcf4dc6d777e0f3a69ba1112dabac4b0ed0df77fa9a1d5e5be1d39cd87"
           },
           {
             "path": "docs/product-specs/attendance-automation.md",
-            "sha256": "81895cda9da2d052b37ae07b300906ebdaad4e5d0a1c63b35933d39834441a99"
+            "sha256": "6e2eb1dfc4efe2994ccbc9ef4d5eedc0b1158068f85c8248ec709e88108d03c4"
           },
           {
             "path": "tests/test_config_flow.py",
@@ -78,6 +78,66 @@
           {
             "path": "tests/test_translations.py",
             "sha256": "b090386cb4cc9bf91c615fb8b9c410cebfc34dc0063bb1d21b9966ec7c69aa81"
+          }
+        ]
+      }
+    },
+    {
+      "path": "docs/product-specs/attendance-reporting.md",
+      "sources": [
+        "custom_components/signinapp/reporting.py",
+        "custom_components/signinapp/quotas.py",
+        "custom_components/signinapp/reporting_coordinator.py",
+        "custom_components/signinapp/reporting_sensor.py",
+        "custom_components/signinapp/api.py",
+        "custom_components/signinapp/sensor.py",
+        "custom_components/signinapp/config_flow.py",
+        "tests/test_reporting.py",
+        "tests/test_reporting_runtime.py"
+      ],
+      "verified": {
+        "verifiedAt": "2026-11-04T19:23:22.071Z",
+        "evidence": "127 HA2025 tests; full 126-test HA2026 run plus latest 37 focused reporting tests pass. Live setup, options country/region forms, primary identity and 11 private UI/notification entity migrations verified against independent API interval sums. Exact signed-in and working totals distinguished; open-session wire shape remains explicitly unverified.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/api.py",
+            "sha256": "03a9d62a333800c718d11cc6dbc7c3657fb66d87bb11cb1ccea2cd84e8113387"
+          },
+          {
+            "path": "custom_components/signinapp/config_flow.py",
+            "sha256": "38df3e8975a29c0fab3fe6cbc48b048a5495d8eee3b60d16f47b959cfc81ff07"
+          },
+          {
+            "path": "custom_components/signinapp/quotas.py",
+            "sha256": "ae2e6fd372392f841ef52d04f07b03d2b59e7174a61ed816489eb80afb915b98"
+          },
+          {
+            "path": "custom_components/signinapp/reporting_coordinator.py",
+            "sha256": "908afc2340070d8b98188e2ac2f1f91cf4810cc0a8f68d3ee24fb0abc0659f8d"
+          },
+          {
+            "path": "custom_components/signinapp/reporting_sensor.py",
+            "sha256": "b1f7f1b560e2c74fd335321430117c134fbdbd9c1741222e1a925b2668ee61e0"
+          },
+          {
+            "path": "custom_components/signinapp/reporting.py",
+            "sha256": "0d7489385bc74c1bce6ff4fc2254308cfb797a05beb9a424fa127b13ef9cbae4"
+          },
+          {
+            "path": "custom_components/signinapp/sensor.py",
+            "sha256": "a9914c5226b1e9c24fb6b6b711ec2f73984aeac65964528dde199a363fcfdb54"
+          },
+          {
+            "path": "docs/product-specs/attendance-reporting.md",
+            "sha256": "0c1f2ae4670b3fbebf9dd468660667bbe4d0afa6b0d3814f84472bf1fe8532eb"
+          },
+          {
+            "path": "tests/test_reporting_runtime.py",
+            "sha256": "0992b3263ef12a8a2c00f7b3328075eb38ab83e353608fdb7f8ce3680eddbdb9"
+          },
+          {
+            "path": "tests/test_reporting.py",
+            "sha256": "dbaded2717a51888d9d6eb566aec4f507c2cd06d1414f929b743cc3e8c633268"
           }
         ]
       }

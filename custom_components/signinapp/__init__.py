@@ -215,8 +215,14 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     }
 
     await hass.config_entries.async_forward_entry_setups(entry, PLATFORMS)
+    entry.async_on_unload(entry.add_update_listener(async_options_updated))
 
     return True
+
+
+async def async_options_updated(hass: HomeAssistant, entry: ConfigEntry):
+    """Quota/calendar changes are local options, separate from attendance routing."""
+    await hass.config_entries.async_reload(entry.entry_id)
 
 async def async_unload_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Unload a config entry."""
@@ -313,6 +319,10 @@ async def async_refresh_entry_state(entry_data):
     coordinator = entry_data.get("coordinator")
     if coordinator is not None:
         await coordinator.async_request_refresh()
+    reporting = entry_data.get("reporting_coordinator")
+    if reporting is not None:
+        reporting.invalidate_history()
+        await reporting.async_request_refresh()
 
 
 def set_runtime_status_reason(entry_data: dict[str, Any], reason: str | None) -> None:

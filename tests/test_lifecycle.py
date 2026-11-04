@@ -59,6 +59,9 @@ class FakeApi:
             "currentVisit": {"siteId": 100},
         }
 
+    async def get_history(self, date_from, date_to):
+        return []
+
 
 class MutableApi(FakeApi):
     """API stub with mutable config state for coordinator refresh tests."""
@@ -335,7 +338,7 @@ class LifecycleTests(unittest.IsolatedAsyncioTestCase):
 
         await sensor_module.async_setup_entry(self.hass, entry, add_entities)
 
-        self.assertEqual(len(added_entities), 1)
+        self.assertGreater(len(added_entities), 1)
         self.assertIsNotNone(self.hass.data[integration.DOMAIN][entry.entry_id]["coordinator"])
         self.assertEqual(added_entities[0].native_value, "signed_in")
         self.assertEqual(added_entities[0].extra_state_attributes["status_class"], "signed_in")
