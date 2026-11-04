@@ -40,7 +40,9 @@ History is shared by all entities, fetched in at most 45-day chunks, refreshed e
 | HA lifecycle | Primary status preserved; history errors isolated; retries/read caching; dynamic discovery; options reload; unique IDs |
 | Live migration | Backend totals checked, prior UI/notification IDs mapped without `_2`, private visibility retained, no attendance test mutations |
 
-The implemented 1.1.0 reliability branch is a dependency until its separate PR is merged. This feature must not revert those deployed fixes when released.
+The reporting implementation includes the 1.1.0 reliability changes. Updating the
+integration installs both the attendance safeguards and the reporting features;
+no separate reliability branch is needed.
 
 Verification on 4 November 2026: 127 tests passed with HA 2025.1.4. The full
 126-test suite run with HA 2026.10.4 passed, and the latest 37 focused

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 21,
+  "revision": 22,
   "knowledge": [
     {
       "path": "docs/exec-plans/tech-debt-tracker.md",
@@ -96,8 +96,8 @@
         "tests/test_reporting_runtime.py"
       ],
       "verified": {
-        "verifiedAt": "2026-11-04T20:10:27.199Z",
-        "evidence": "Reviewed candidate docs against the final examples. Routing and canonical states unchanged; live history evidence remains dated with open-session limitation. README, map and census link the new guide. Confidence, quotas, native reporting IDs, notification lifecycle and synthetic verification match the documented contracts. No real attendance export or personal configuration is published.",
+        "verifiedAt": "2026-11-04T22:10:57.795Z",
+        "evidence": "Reviewed final merge preparation against reporting and reliability code. The combined feature contains the 1.1.0 safeguards already, so removed the obsolete separate-branch prerequisite. Reporting calculations and examples unchanged; current GitHub tests passed both HA versions at64f837d. CI update restores the existing required check name with an aggregate that fails unless the whole matrix succeeds.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/api.py",
@@ -129,7 +129,7 @@
           },
           {
             "path": "docs/product-specs/attendance-reporting.md",
-            "sha256": "24ff13b1581ce34c3c01c831fde32dad7db4e3f92ade8ffd3c9c14f4656fa6a4"
+            "sha256": "690e0a8bf3b27de136dd4c6b7203e960fe5529b1cd15cb4d4f78c27ef39a9c95"
           },
           {
             "path": "tests/test_reporting_runtime.py",
