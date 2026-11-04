@@ -78,6 +78,9 @@ for period, classification and quota semantics.
 
 ## Documentation
 
+- [Automation and dashboard examples](examples/README.md): native zones, Custom
+  Zone polygons, notifications, cumulative totals and expandable reporting cards.
+
 Start with:
 
 - [ARCHITECTURE.md](ARCHITECTURE.md)

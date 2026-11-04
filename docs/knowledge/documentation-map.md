@@ -69,6 +69,10 @@ This map records the repository's typed durable knowledge surfaces and their bou
 
 - [Home Assistant Sign In App Integration](../../README.md)
 
+## Configuration Guide
+
+- [Attendance automation and dashboard examples](../../examples/README.md)
+
 ## Repository Knowledge
 
 - [Product Sense](../PRODUCT_SENSE.md)

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "revision": 16,
+  "revision": 21,
   "knowledge": [
     {
       "path": "docs/exec-plans/tech-debt-tracker.md",
@@ -96,8 +96,8 @@
         "tests/test_reporting_runtime.py"
       ],
       "verified": {
-        "verifiedAt": "2026-11-04T19:23:22.071Z",
-        "evidence": "127 HA2025 tests; full 126-test HA2026 run plus latest 37 focused reporting tests pass. Live setup, options country/region forms, primary identity and 11 private UI/notification entity migrations verified against independent API interval sums. Exact signed-in and working totals distinguished; open-session wire shape remains explicitly unverified.",
+        "verifiedAt": "2026-11-04T20:10:27.199Z",
+        "evidence": "Reviewed candidate docs against the final examples. Routing and canonical states unchanged; live history evidence remains dated with open-session limitation. README, map and census link the new guide. Confidence, quotas, native reporting IDs, notification lifecycle and synthetic verification match the documented contracts. No real attendance export or personal configuration is published.",
         "sourceIdentities": [
           {
             "path": "custom_components/signinapp/api.py",
@@ -129,7 +129,7 @@
           },
           {
             "path": "docs/product-specs/attendance-reporting.md",
-            "sha256": "0c1f2ae4670b3fbebf9dd468660667bbe4d0afa6b0d3814f84472bf1fe8532eb"
+            "sha256": "24ff13b1581ce34c3c01c831fde32dad7db4e3f92ade8ffd3c9c14f4656fa6a4"
           },
           {
             "path": "tests/test_reporting_runtime.py",
@@ -138,6 +138,53 @@
           {
             "path": "tests/test_reporting.py",
             "sha256": "dbaded2717a51888d9d6eb566aec4f507c2cd06d1414f929b743cc3e8c633268"
+          }
+        ]
+      }
+    },
+    {
+      "path": "examples/README.md",
+      "sources": [
+        "examples/packages/*.yaml",
+        "examples/dashboard/*.yaml",
+        "tests/test_examples.py",
+        "custom_components/signinapp/services.yaml"
+      ],
+      "verified": {
+        "verifiedAt": "2026-11-04T20:10:24.783Z",
+        "evidence": "Reviewed candidate docs against the final examples. Routing and canonical states unchanged; live history evidence remains dated with open-session limitation. README, map and census link the new guide. Confidence, quotas, native reporting IDs, notification lifecycle and synthetic verification match the documented contracts. No real attendance export or personal configuration is published.",
+        "sourceIdentities": [
+          {
+            "path": "custom_components/signinapp/services.yaml",
+            "sha256": "74ab5dbf887367778f8da30e8af65b6966cc4cf891871aff538b2f7186fd0bd9"
+          },
+          {
+            "path": "examples/dashboard/attendance.yaml",
+            "sha256": "bcbca3d7e1f778072d0ea82beddc652a0f76961e7552979d32f8e0ce34962e2c"
+          },
+          {
+            "path": "examples/dashboard/entity-aliases.yaml",
+            "sha256": "e4c0894164ec353c7b1dc9a513a058f2145b1efd6f9c3a8444d005114e06fdcd"
+          },
+          {
+            "path": "examples/packages/attendance.yaml",
+            "sha256": "ab72a8ccf325dfeda9bd078baa15a34aa2a7a03bbac1b2dee94c6ba7891a1ea6"
+          },
+          {
+            "path": "examples/packages/presence-custom-zone.yaml",
+            "sha256": "4eaa98c2c13cfc0ad441ba0fa33475bf55d4364ebfe8e4b2191dbb809d9a65a3"
+          },
+          {
+            "path": "examples/packages/presence-zone.yaml",
+            "sha256": "01d2bb8491be4c922d9552d9a6c7e21ce78da28247c04d3976317f9318be23c5"
+          },
+          {
+            "path": "examples/README.md",
+            "sha256": "6e5cb6a46ac611916b9d60719fa38f92e3a5a954fac12742966c6cd011026808"
+          },
+          {
+            "path": "tests/test_examples.py",
+            "sha256": "4c7d6b15fbe199b6a7c83b00225450a3a640a366472c44eb86729716cb7de93d"
           }
         ]
       }

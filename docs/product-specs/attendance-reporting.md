@@ -15,6 +15,8 @@ The integration reads the companion account's own `/api/mobile/history` records 
 See the [dated history contract](../references/observed-history-contract-2026-11-04.md)
 for observed wire behavior and its limits. Existing [attendance automation](attendance-automation.md)
 routing and mutation guarantees continue to apply.
+Generic [automation and dashboard examples](../../examples/README.md) show the
+native entities, private view, nested report folds and notification lifecycle.
 
 Reporting periods are today, this week (Monday-based), this calendar month, current configured quota period, yesterday, week through yesterday, and each day of this week. Each period exposes signed-in, working, non-working, unclassified working/activity time, session count, each backend activity type, quota target, used, remaining, overtime, signed balance, completed/remaining/overtime percentages, nominal quota and holiday reduction. Each activity also offers its percentage of signed-in time, working time (where applicable), and quota contribution. Activity and entity identity use stable backend activity IDs; label edits do not create duplicate entities. Secondary daily quota/activity combinations and activity percentages are offered disabled by default to avoid flooding dashboards. Quota entities outside the base period are unavailable while rollups are disabled.
 

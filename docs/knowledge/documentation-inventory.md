@@ -21,7 +21,7 @@ This is an exhaustive census of every in-scope tracked or pending Markdown file 
 
 ## Census result
 
-- In-scope Markdown files: 31
+- In-scope Markdown files: 33
 - Excluded skill-package files: 0
 - Unclassified files: 0
 - Exact duplicate governed knowledge bodies: 0
@@ -30,9 +30,9 @@ This is an exhaustive census of every in-scope tracked or pending Markdown file 
 |---|---:|
 | Generated visualization | 1 |
 | OKF execution concept | 1 |
-| OKF knowledge concept | 23 |
+| OKF knowledge concept | 24 |
 | Repository instruction | 2 |
-| Reserved OKF navigation/history | 4 |
+| Reserved OKF navigation/history | 5 |
 
 ## Completeness
 
@@ -74,6 +74,8 @@ This is an exhaustive census of every in-scope tracked or pending Markdown file 
 | [`docs/RELIABILITY.md`](../RELIABILITY.md) | OKF knowledge concept | OKF | Reliability Contract |
 | [`docs/SECURITY.md`](../SECURITY.md) | OKF knowledge concept | OKF | Security Boundary |
 | [`GLOSSARY.md`](../../GLOSSARY.md) | OKF knowledge concept | OKF | Glossary Concept |
+| [`examples/README.md`](../../examples/README.md) | OKF knowledge concept | OKF | Configuration Guide |
+| [`examples/index.md`](../../examples/index.md) | Reserved OKF navigation/history | OKF exception | Generated example navigation |
 | [`README.md`](../../README.md) | OKF knowledge concept | OKF | Repository Guide |
 | [`tasks/adopt-rke-okf-knowledge/task.md`](../../tasks/adopt-rke-okf-knowledge/task.md) | OKF execution concept | OKF | Task |
 | [`tasks/index.md`](../../tasks/index.md) | Reserved OKF navigation/history | OKF exception | Reserved index.md/log.md schema |

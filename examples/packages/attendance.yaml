@@ -1,0 +1,300 @@
+input_boolean:
+  attendance_visit_active:
+    name: Attendance visit active
+    icon: mdi:map-marker-check
+  attendance_critical_alerts:
+    name: Attendance critical alerts
+    icon: mdi:bell-alert
+input_text:
+  attendance_hours_reminder_date:
+    name: Attendance reminder date
+    max: 10
+  attendance_recap_date:
+    name: Attendance recap date
+    max: 10
+automation:
+  - id: attendance_signed_in
+    alias: Attendance signed in
+    description: Generic API-backed attendance example. Notification durations round to the nearest 15 minutes; stored
+      hours stay exact.
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.attendee_status
+    conditions:
+      - condition: template
+        value_template: "{{ trigger.from_state is not none and trigger.to_state is not none and trigger.to_state.state ==
+          'signed_in' and trigger.to_state.attributes.get('active_work_location_id') == 1001 and (trigger.from_state.state
+          == 'signed_out' or (trigger.from_state.state == 'signed_in' and trigger.from_state.attributes.get('active_work_location_id')
+          is not none and trigger.from_state.attributes.get('active_work_location_id') != 1001)) }}"
+    actions:
+      - action: notify.mobile_app_primary_phone
+        enabled: true
+        data:
+          message: You've been signed in to the primary site
+          data:
+            notification_icon: mdi:briefcase
+            tag: attendance_signed_in
+            group: Sign In Updates
+            channel: Sign In Updates
+            clickAction: /lovelace/attendance
+            timeout: 21600
+          title: Sign in update 🔐
+    mode: single
+  - id: attendance_signed_out
+    alias: Attendance signed out
+    description: Generic API-backed attendance example. Notification durations round to the nearest 15 minutes; stored
+      hours stay exact.
+    triggers:
+      - trigger: state
+        entity_id:
+          - sensor.attendee_status
+    conditions:
+      - condition: template
+        value_template: "{{ trigger.from_state is not none and trigger.to_state is not none and trigger.from_state.state ==
+          'signed_in' and trigger.to_state.state == 'signed_out' }}"
+    actions:
+      - variables:
+          event_day: '{{ as_local(trigger.to_state.last_changed).date().isoformat() }}'
+          event_week: '{{ (as_local(trigger.to_state.last_changed).date()-timedelta(days=as_local(trigger.to_state.last_changed).weekday())).isoformat()
+            }}'
+      - action: homeassistant.update_entity
+        target:
+          entity_id:
+            - sensor.attendee_today_signed_in
+            - sensor.attendee_week_signed_in
+            - sensor.attendee_yesterday_signed_in
+            - sensor.attendee_week_to_yesterday_signed_in
+        continue_on_error: true
+      - delay:
+          seconds: 2
+      - variables:
+          daily_entity: "{{ 'sensor.attendee_today_signed_in' if event_day==now().date().isoformat() else 'sensor.attendee_yesterday_signed_in'
+            if event_day==(now().date()-timedelta(days=1)).isoformat() else '' }}"
+          weekly_entity: "{{ 'sensor.attendee_week_signed_in' if event_week==(now().date()-timedelta(days=now().weekday())).isoformat()
+            else 'sensor.attendee_week_to_yesterday_signed_in' if event_day==(now().date()-timedelta(days=1)).isoformat()
+            else '' }}"
+      - variables:
+          total_hours: '{{ states(daily_entity)|float(none) if daily_entity else none }}'
+          week_hours: '{{ states(weekly_entity)|float(none) if weekly_entity else none }}'
+      - variables:
+          total_words: |-
+            {%- if total_hours is number and total_hours is not boolean -%}
+             {%- set minutes=((total_hours*4+0.5)|round(0,'floor')|int)*15 -%}
+             {%- set hours=minutes//60 -%}{%- set remainder=minutes%60 -%}
+             {{- (hours|string)+' '+('hour' if hours==1 else 'hours') if hours else '' -}}
+             {{- ' ' if hours and remainder else '' -}}
+             {{- (remainder|string)+' '+('minute' if remainder==1 else 'minutes') if remainder or not hours else '' -}}
+            {%- else -%}unavailable{%- endif -%}
+          week_words: |-
+            {%- if week_hours is number and week_hours is not boolean -%}
+             {%- set minutes=((week_hours*4+0.5)|round(0,'floor')|int)*15 -%}
+             {%- set hours=minutes//60 -%}{%- set remainder=minutes%60 -%}
+             {{- (hours|string)+' '+('hour' if hours==1 else 'hours') if hours else '' -}}
+             {{- ' ' if hours and remainder else '' -}}
+             {{- (remainder|string)+' '+('minute' if remainder==1 else 'minutes') if remainder or not hours else '' -}}
+            {%- else -%}unavailable{%- endif -%}
+      - action: notify.mobile_app_primary_phone
+        data:
+          message: clear_notification
+          data:
+            tag: attendance_signed_in
+      - action: notify.mobile_app_primary_phone
+        data:
+          message: clear_notification
+          data:
+            tag: attendance_daily_hours
+      - action: notify.mobile_app_primary_phone
+        data:
+          title: Sign in update 🔐
+          message: "{{ \"You've been signed out. You were signed in for \"+total_words+(\" today and this week.\" if total_words==week_words
+            else \" today and \"+week_words+\" this week.\" if week_words!='unavailable' else \" today.\") if total_words!='unavailable'
+            else \"You've been signed out. Today's signed-in total is unavailable.\" }}"
+          data:
+            notification_icon: mdi:briefcase
+            group: Sign In Updates
+            channel: Sign In Updates
+            clickAction: /lovelace/attendance
+            tag: attendance_signed_out
+            timeout: 21600
+    mode: queued
+    max: 10
+  - id: attendance_daily_hours
+    alias: Attendance daily hours
+    description: Generic API-backed attendance example. Notification durations round to the nearest 15 minutes; stored
+      hours stay exact.
+    triggers:
+      - trigger: state
+        entity_id: sensor.attendee_today_signed_in
+        id: check
+      - trigger: homeassistant
+        event: start
+        id: check
+      - trigger: event
+        event_type: automation_reloaded
+        id: check
+      - trigger: time_pattern
+        minutes: /1
+        id: check
+      - trigger: state
+        entity_id: sensor.attendee_status
+        from: signed_in
+        to: signed_out
+        id: clear
+      - trigger: time
+        at: 00:00:00
+        id: clear
+    conditions: []
+    actions:
+      - choose:
+          - conditions: "{{ trigger.id|default('check')=='clear' }}"
+            sequence:
+              - action: notify.mobile_app_primary_phone
+                data:
+                  message: clear_notification
+                  data:
+                    tag: attendance_daily_hours
+        default:
+          - condition: template
+            value_template: "{{ is_number(states('sensor.attendee_today_signed_in')) and states('sensor.attendee_today_signed_in')|float
+              >= 8 and states('input_text.attendance_hours_reminder_date') != now().date().isoformat() }}"
+          - condition: template
+            value_template: '{{ as_local(states.sensor.attendee_today_signed_in.last_updated).date()==now().date() }}'
+          - condition: state
+            entity_id: sensor.attendee_status
+            state: signed_in
+          - action: homeassistant.update_entity
+            target:
+              entity_id: sensor.attendee_week_signed_in
+            continue_on_error: true
+          - variables:
+              week_hours: "{{ states('sensor.attendee_week_signed_in')|float(none) }}"
+          - variables:
+              week_words: |-
+                {%- if week_hours is number and week_hours is not boolean -%}
+                 {%- set minutes=((week_hours*4+0.5)|round(0,'floor')|int)*15 -%}
+                 {%- set hours=minutes//60 -%}{%- set remainder=minutes%60 -%}
+                 {{- (hours|string)+' '+('hour' if hours==1 else 'hours') if hours else '' -}}
+                 {{- ' ' if hours and remainder else '' -}}
+                 {{- (remainder|string)+' '+('minute' if remainder==1 else 'minutes') if remainder or not hours else '' -}}
+                {%- else -%}unavailable{%- endif -%}
+          - action: notify.mobile_app_primary_phone
+            data:
+              title: Sign in update 🔐
+              message: "{{ \"You've been signed in for 8 hours today\"+(' and '+week_words+' this week.' if week_words!='unavailable'
+                else '.') }}"
+              data:
+                notification_icon: mdi:briefcase
+                group: Sign In Updates
+                channel: Sign In Updates
+                clickAction: /lovelace/attendance
+                tag: attendance_daily_hours
+                timeout: 21600
+          - action: input_text.set_value
+            target:
+              entity_id: input_text.attendance_hours_reminder_date
+            data:
+              value: '{{ now().date().isoformat() }}'
+    mode: queued
+    max: 10
+    trace:
+      stored_traces: 15
+  - id: attendance_midnight_recap
+    alias: Attendance midnight recap
+    description: Generic API-backed attendance example. Notification durations round to the nearest 15 minutes; stored
+      hours stay exact.
+    triggers:
+      - trigger: time
+        at: 00:00:10
+      - trigger: homeassistant
+        event: start
+      - trigger: event
+        event_type: automation_reloaded
+      - trigger: time_pattern
+        minutes: /5
+    conditions: []
+    actions:
+      - variables:
+          recap_date: '{{ (now().date()-timedelta(days=1)).isoformat() }}'
+          recap_day: "{{ (now()-timedelta(days=1)).strftime('%A') }}"
+          friday: '{{ (now()-timedelta(days=1)).weekday()==4 }}'
+      - condition: template
+        value_template: "{{ states('input_text.attendance_recap_date') != recap_date }}"
+      - action: homeassistant.update_entity
+        target:
+          entity_id:
+            - sensor.attendee_yesterday_signed_in
+            - sensor.attendee_week_to_yesterday_signed_in
+        continue_on_error: true
+      - condition: template
+        value_template: "{{ is_number(states('sensor.attendee_yesterday_signed_in')) and is_number(states('sensor.attendee_week_to_yesterday_signed_in'))
+          and as_local(states.sensor.attendee_yesterday_signed_in.last_reported).date()==now().date() and as_local(states.sensor.attendee_week_to_yesterday_signed_in.last_reported).date()==now().date()
+          }}"
+      - variables:
+          total_hours: "{{ states('sensor.attendee_yesterday_signed_in')|float }}"
+          week_hours: "{{ states('sensor.attendee_week_to_yesterday_signed_in')|float }}"
+      - variables:
+          total_words: |-
+            {%- if total_hours is number and total_hours is not boolean -%}
+             {%- set minutes=((total_hours*4+0.5)|round(0,'floor')|int)*15 -%}
+             {%- set hours=minutes//60 -%}{%- set remainder=minutes%60 -%}
+             {{- (hours|string)+' '+('hour' if hours==1 else 'hours') if hours else '' -}}
+             {{- ' ' if hours and remainder else '' -}}
+             {{- (remainder|string)+' '+('minute' if remainder==1 else 'minutes') if remainder or not hours else '' -}}
+            {%- else -%}unavailable{%- endif -%}
+          week_words: |-
+            {%- if week_hours is number and week_hours is not boolean -%}
+             {%- set minutes=((week_hours*4+0.5)|round(0,'floor')|int)*15 -%}
+             {%- set hours=minutes//60 -%}{%- set remainder=minutes%60 -%}
+             {{- (hours|string)+' '+('hour' if hours==1 else 'hours') if hours else '' -}}
+             {{- ' ' if hours and remainder else '' -}}
+             {{- (remainder|string)+' '+('minute' if remainder==1 else 'minutes') if remainder or not hours else '' -}}
+            {%- else -%}unavailable{%- endif -%}
+      - action: notify.mobile_app_primary_phone
+        data:
+          title: Sign in update 🔐
+          message: "{{ 'Your daily sign-in total was '+total_words+(', bringing your weekly total to '+week_words+'.' if friday
+            else ', with '+week_words+' so far this week.') }}"
+          data:
+            notification_icon: mdi:briefcase
+            group: Sign In Updates
+            channel: Sign In Updates
+            clickAction: /lovelace/attendance
+            tag: attendance_daily_recap
+            timeout: 21600
+      - action: input_text.set_value
+        target:
+          entity_id: input_text.attendance_recap_date
+        data:
+          value: '{{ recap_date }}'
+    mode: queued
+    max: 10
+    trace:
+      stored_traces: 15
+  - id: attendance_notification_cleanup
+    alias: Attendance notification cleanup
+    triggers:
+      - trigger: time
+        at: 06:00:00
+    actions:
+      - action: notify.mobile_app_primary_phone
+        data:
+          message: clear_notification
+          data:
+            tag: attendance_signed_in
+      - action: notify.mobile_app_primary_phone
+        data:
+          message: clear_notification
+          data:
+            tag: attendance_signed_out
+      - action: notify.mobile_app_primary_phone
+        data:
+          message: clear_notification
+          data:
+            tag: attendance_daily_hours
+      - action: notify.mobile_app_primary_phone
+        data:
+          message: clear_notification
+          data:
+            tag: attendance_daily_recap
+    mode: single
